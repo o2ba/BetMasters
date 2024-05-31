@@ -14,7 +14,7 @@ public final class SqlQueries {
     public static String GET_USER_BY_EMAIL = "SELECT * FROM users WHERE email = ?";
     public static String GET_USER_BY_EMAIL_AND_PASSWORD = "SELECT * FROM users WHERE email = ? AND password = ?";
 
-    public static String STORE_REFRESH_TOKEN = "INSERT INTO refresh_toksens (token, uid, expiry) VALUES (?, ?, ?)";
+    public static String STORE_REFRESH_TOKEN = "INSERT INTO refresh_tokens (token, uid, expiry) VALUES (?, ?, ?)";
     public static String GET_USER_BY_REFRESH_TOKEN = "SELECT * FROM users INNER JOIN refresh_tokens ON users.uid = refresh_tokens.uid WHERE refresh_tokens.token = ?";
     public static String INVALIDATE_REFRESH_TOKEN = "DELETE FROM refresh_tokens WHERE token = ?";
 }
