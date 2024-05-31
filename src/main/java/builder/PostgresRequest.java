@@ -1,4 +1,4 @@
-package main.java.builder;
+package builder;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

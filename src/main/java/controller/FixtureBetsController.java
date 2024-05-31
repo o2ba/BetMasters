@@ -1,4 +1,4 @@
-package main.java.controller;
+package controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -6,8 +6,8 @@ import com.google.gson.JsonArray;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import main.java.object.FixtureObject;
-import main.java.service.FixtureService;
+import object.FixtureObject;
+import service.FixtureService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

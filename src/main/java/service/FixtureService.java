@@ -1,14 +1,14 @@
-package main.java.service;
+package service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.microsoft.applicationinsights.TelemetryClient;
 import com.microsoft.applicationinsights.telemetry.RemoteDependencyTelemetry;
-import main.java.builder.ApiRequest;
-import main.java.builder.MetricsRequest;
-import main.java.object.FixtureBetsObject;
-import main.java.object.FixtureObject;
-import main.java.response.FixtureOddsResponse;
+import builder.ApiRequest;
+import builder.MetricsRequest;
+import object.FixtureBetsObject;
+import object.FixtureObject;
+import response.FixtureOddsResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package main.java.util;
+package util;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -12,11 +12,11 @@ public class EncryptionUtil {
         this.passwordEncoder = new BCryptPasswordEncoder(STRENGTH);
     }
 
-    public String encrypt(String password) {
-        return passwordEncoder.encode(password);
+    public String encrypt(String encodeString) {
+        return passwordEncoder.encode(encodeString);
     }
 
-    public boolean matches(String rawPassword, String encodedPassword) {
-        return passwordEncoder.matches(rawPassword, encodedPassword);
+    public boolean matches(String rawPassword, String encodedString) {
+        return passwordEncoder.matches(rawPassword, encodedString);
     }
 }

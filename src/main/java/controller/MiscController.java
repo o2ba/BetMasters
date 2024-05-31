@@ -38,4 +38,14 @@ public class MiscController {
         }
     }
 
+    /**
+     * Returns a 418 I'm a teapot response. Serves to test the error handling.
+     * @return a 418 I'm a teapot response
+     */
+    @GetMapping("/teapot")
+    @ResponseBody
+    public ResponseEntity<String> teapot() {
+        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("I'm a teapot");
+    }
+
 }
