@@ -1,4 +1,4 @@
-package main.java.response;
+package response;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
