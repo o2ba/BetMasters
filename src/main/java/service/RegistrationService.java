@@ -1,16 +1,18 @@
-package main.java.service;
+package service;
 
 
-import main.java.builder.PostgresRequest;
-import main.java.exception.sql.UserNotFoundException;
-import main.java.exception.sql.ValidationException;
-import main.java.sql.SqlQueries;
-import main.java.util.EncryptionUtil;
-import main.java.util.ValidationUtil;
+import builder.PostgresRequest;
+import exception.user.*;
+import sql.SqlQueries;
+import util.EncryptionUtil;
+import util.ValidationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 /**
@@ -32,11 +34,14 @@ public final class RegistrationService {
      * @param email     the email of the user
      * @param password  the password of the user
      * @param dob       the date of birth of the user
+     * @throws SQLException            if there is an error with the SQL query
+     * @throws ValidationException     if the email, first name, last name, or password is invalid
+     * @throws DuplicateEmailException if the email already exists in the database
+     * @throws RateLimitException      if the rate limit is exceeded
+     * @see ValidationUtil validation rules
      */
-    public void createUser(String firstName, String lastName, String email, String password, String dob)
-            throws SQLException, ValidationException {
-        var encryptionUtil = new EncryptionUtil();
-        password = encryptionUtil.encrypt(password);
+    public void createUser(String firstName, String lastName, String email, String password, LocalDate dob)
+            throws SQLException, ValidationException, DuplicateEmailException, RateLimitException {
 
         var validationUtil = new ValidationUtil();
         validationUtil.validateEmail(email);
@@ -44,13 +49,30 @@ public final class RegistrationService {
         validationUtil.validateName(lastName);
         validationUtil.validatePassword(password);
 
+        var encryptionUtil = new EncryptionUtil();
+        password = encryptionUtil.encrypt(password);
+
         var dbRequest = new PostgresRequest();
-        try {
-            dbRequest.executeUpdate(SqlQueries.ADD_USER, email, password);
-            storeEmailToken(email);
+
+        try (ResultSet resultSet = dbRequest.executeQuery(SqlQueries.CHECK_EMAIL_EXISTS, email)) {
+            if (resultSet.next()) {
+                logger.debug("Email already exists");
+                throw new DuplicateEmailException("Email already exists");
+            }
+        }
+
+        try (ResultSet resultSet = dbRequest.executeQuery(SqlQueries.ADD_USER, firstName, lastName, email, password, dob)){
+            if (!resultSet.next()) {
+                logger.error("User created but no UID returned");
+                throw new SQLException("No UID returned");
+            }
+            storeEmailToken(resultSet.getInt("uid"));
         } catch (SQLException e) {
-            logger.error("Error creating user", e);
-            throw new SQLException("Error creating user");
+            if (e.getSQLState().equals("23505")) {
+                throw new DuplicateEmailException();
+            } else {
+                throw new SQLException();
+            }
         }
     }
 
@@ -75,22 +97,27 @@ public final class RegistrationService {
      *
      * @param emailToken the token sent to the user's email
      * @throws UserNotFoundException if the user is not found
+     * @throws NullPointerException   if the token is not found
+     * @throws ExpiredTokenException if the token has expired
      * @throws SQLException          if there is an error with the SQL query
      */
     public void verifyEmail(String emailToken)
-            throws UserNotFoundException, SQLException {
+            throws UserNotFoundException, InvalidTokenException, ExpiredTokenException, SQLException {
         var dbRequest = new PostgresRequest();
         try (var resultsSet = dbRequest.executeQuery(SqlQueries.DELETE_EMAIL_VERIFICATION_GET_UID_EXPIRY, emailToken)) {
             if (!resultsSet.next()) {
-                logger.debug("Invalid token");
+                throw new InvalidTokenException();
             }
-            int uid = resultsSet.getInt("uid");
-            logger.debug("User found with uid: {}", uid);
-
-            int rowsUpdated = dbRequest.executeUpdate(SqlQueries.VERIFY_USER, uid);
-            if (rowsUpdated == 0) {
-                logger.debug("Valid token but user not found for user {}", uid);
-                throw new UserNotFoundException("User not found");
+            LocalDateTime expiry = LocalDateTime.now();
+            if (resultsSet.getTimestamp("expiry").toLocalDateTime().isBefore(expiry)) {
+                throw new ExpiredTokenException();
+            } else {
+                int uid = resultsSet.getInt("uid");
+                int rowsUpdated = dbRequest.executeUpdate(SqlQueries.VERIFY_USER, uid);
+                if (rowsUpdated == 0) {
+                    logger.debug("Valid token but user not found for user {}", uid);
+                    throw new UserNotFoundException("User not found");
+                }
             }
         }
     }
@@ -113,9 +140,19 @@ public final class RegistrationService {
         return builder.toString();
     }
 
-    private void storeEmailToken(String emailToken)
+
+    /**
+     * Stores the email token in the database.
+     * The token is expired after 24 hours.
+     * @param uid the UID of the user
+     * @throws SQLException if there is an error with the SQL query
+     */
+    private void storeEmailToken(int uid)
             throws SQLException {
         var dbRequest = new PostgresRequest();
-        dbRequest.executeUpdate(SqlQueries.ADD_EMAIL_VERIFICATION_TOKEN, generateEmailToken(), emailToken);
+
+        LocalDateTime expiry = LocalDateTime.now().plusDays(1);
+
+        dbRequest.executeUpdate(SqlQueries.ADD_EMAIL_VERIFICATION_TOKEN, generateEmailToken(), uid, expiry);
     }
 }

@@ -1,4 +1,4 @@
-package main.java.builder;
+package builder;
 
 
 import com.microsoft.applicationinsights.TelemetryClient;
@@ -23,7 +23,7 @@ public final class MetricsRequest {
     private void initializeTelemetryClient() {
         String instrumentationKey = System.getenv("INSTRUMENTATION_KEY");
         if (instrumentationKey == null) {
-            throw new IllegalStateException("INSTRUMENTATION_KEY is not set in environment variables.");
+            throw new RuntimeException("INSTRUMENTATION_KEY is not set in environment variables.");
         }
 
         TelemetryConfiguration config = TelemetryConfiguration.createDefault();

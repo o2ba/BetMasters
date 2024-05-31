@@ -1,4 +1,4 @@
-package main.java.exception.sql;
+package exception.user;
 
 public class WrongPasswordRateLimitException extends Exception {
     public WrongPasswordRateLimitException() {

@@ -1,4 +1,4 @@
-package main.java.builder;
+package builder;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -55,7 +55,7 @@ public final class PostgresRequest {
      * @throws IllegalStateException if the DataSource is not initialized.
      */
     public PostgresRequest() {
-        if (dataSource == null) throw new IllegalStateException("DataSource not initialized.");
+        if (dataSource == null) throw new RuntimeException("DataSource not initialized.");
     }
 
     /**

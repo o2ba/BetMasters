@@ -1,19 +1,23 @@
-package main.java.util;
+package util;
 
-import main.java.exception.sql.ValidationException;
+import exception.user.ValidationException;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 
 public class ValidationUtil {
     /**
-     * Validates an email. An email must contain an @ symbol, and have a dot after the @ symbol.
+     * Validates an email.
+     * An email must contain an @ symbol, and have a dot after the @ symbol.
+     * Max length of email is 254 characters.
      * @param email the email to validate
      * @throws ValidationException if the email is invalid
      */
     public void validateEmail(String email) throws ValidationException {
         if (!email.matches("^.+@.+\\..+$")) {
             throw new ValidationException("Invalid email format");
+        } else if (email.length() > 254) {
+            throw new ValidationException("Email must be at most 320 characters long");
         }
     }
 
@@ -35,17 +39,14 @@ public class ValidationUtil {
 
     /**
      * Validates a password. A password must be at least 8 characters long, at most 50 characters long,
-     * and contain at least one lowercase letter, one uppercase letter, and one digit.
+     * and contain at least one lowercase letter, one uppercase letter, one symbol and one digit.
      * @param password the password to validate
      * @throws ValidationException if the password is invalid
      */
     public void validatePassword(String password) throws ValidationException {
-        if (password.length() < 8) {
-            throw new ValidationException("Password must be at least 8 characters long");
-        } else if (password.length() > 50) {
-            throw new ValidationException("Password must be at most 50 characters long");
-        } else if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$")) {
-            throw new ValidationException("Password must contain at least one lowercase letter, one uppercase letter, and one digit");
+        if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\da-zA-Z]).{8,50}$")) {
+            throw new ValidationException("Password must be at least 8 characters long, " +
+                    "contain at least one lowercase letter, one uppercase letter, one symbol and one digit");
         }
     }
 
