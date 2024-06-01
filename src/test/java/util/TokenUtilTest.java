@@ -1,5 +1,6 @@
 package util;
 
+import com.nimbusds.jose.JOSEException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -17,17 +18,17 @@ class TokenUtilTest {
     }
 
     @Test
-    void buildPayload() {
-        assertDoesNotThrow(() -> jwtUtil.buildToken("test", 1, 15));
+    void buildPayload() throws JOSEException {
+        assertDoesNotThrow(() -> jwtUtil.buildToken("test", 15));
     }
 
     /*
      * Tests a valid token, an invalid token and an expired token.
      */
     @Test
-    void decodeToken() {
+    void decodeToken() throws JOSEException {
         String token = jwtUtil
-                .buildToken("test@betmasterc.cc", 1, 15);
+                .buildToken("test@betmasterc.cc", 15);
         Claims claims = jwtUtil.decodeToken(token);
 
         assertFalse(claims.isEmpty());
@@ -39,15 +40,15 @@ class TokenUtilTest {
         assertThrows(MalformedJwtException.class, () -> jwtUtil.decodeToken(invalidToken));
 
         String expiredToken = jwtUtil
-                .buildToken("test@betmasterc.cc", 1, -15);
+                .buildToken("test@betmasterc.cc", -15);
         assertThrows(ExpiredJwtException.class, () -> jwtUtil.decodeToken(expiredToken));
 
     }
 
     @Test
-    void verifyToken() {
+    void verifyToken() throws JOSEException {
         String token = jwtUtil
-                .buildToken("test", 1, 15);
+                .buildToken("test", 15);
         assertTrue(jwtUtil.verifyToken(token));
         assertFalse(jwtUtil.verifyToken("invalid token"));
 
