@@ -61,11 +61,12 @@ public class LoginService {
             // Generate a new refresh token
             NonSensitiveData refreshToken = refreshTokenService.generateRefreshToken();
             // Encrypt and save the refresh token
-            refreshTokenService.encryptAndSaveToken(refreshToken, email);
+            // refreshTokenService.encryptAndSaveToken(refreshToken, email);
 
 
         }
 
+        return null;
     }
 
     /**

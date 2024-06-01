@@ -40,7 +40,7 @@ public class LoginController {
             return ResponseEntity.ok(s.get("token"));
         } catch (WrongEmailPasswordException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong email or password");
-        } catch (SQLException e) {
+        } catch (Exception e) {
             logger.error("An error occurred while logging in", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
