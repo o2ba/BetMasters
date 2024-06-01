@@ -1,4 +1,4 @@
-package object;
+package object.fixture;
 
 
 import com.google.gson.*;

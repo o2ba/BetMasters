@@ -4,12 +4,13 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import org.junit.jupiter.api.Test;
+import util.auth.TokenUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class JwtUtilTest {
+class TokenUtilTest {
 
-    JwtUtil jwtUtil = new JwtUtil();
+    TokenUtil jwtUtil = new TokenUtil();
 
     @Test
     void buildHeader() {

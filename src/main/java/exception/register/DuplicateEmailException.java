@@ -1,4 +1,4 @@
-package exception.user;
+package exception.register;
 
 public class DuplicateEmailException extends Exception {
 

@@ -6,7 +6,7 @@ import com.google.gson.JsonArray;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import object.FixtureObject;
+import object.fixture.FixtureObject;
 import service.FixtureService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

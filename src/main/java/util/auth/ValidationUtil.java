@@ -1,10 +1,14 @@
-package util;
+package util.auth;
 
-import exception.user.ValidationException;
+import exception.register.ValidationException;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 
+
+/**
+ * Able to validate email, name, date of birth, and token expiry.
+ */
 public class ValidationUtil {
     /**
      * Validates an email.
@@ -34,19 +38,6 @@ public class ValidationUtil {
             throw new ValidationException("Name must be at most 50 characters long");
         } else if(!name.matches("^[a-zA-Z-'\\s]+$")) {
             throw new ValidationException("Name can only contain letters, hyphens, apostrophes, and spaces");
-        }
-    }
-
-    /**
-     * Validates a password. A password must be at least 8 characters long, at most 50 characters long,
-     * and contain at least one lowercase letter, one uppercase letter, one symbol and one digit.
-     * @param password the password to validate
-     * @throws ValidationException if the password is invalid
-     */
-    public void validatePassword(String password) throws ValidationException {
-        if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\da-zA-Z]).{8,50}$")) {
-            throw new ValidationException("Password must be at least 8 characters long, " +
-                    "contain at least one lowercase letter, one uppercase letter, one symbol and one digit");
         }
     }
 
