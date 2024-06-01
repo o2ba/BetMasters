@@ -1,11 +1,17 @@
 package service;
 
 
-import builder.PostgresRequest;
-import exception.user.*;
+import object.security.EncryptedData;
+import object.security.SensitiveData;
+import request.PostgresRequest;
+import exception.gen.RateLimitException;
+import exception.gen.UserNotFoundException;
+import exception.register.DuplicateEmailException;
+import exception.register.ExpiredTokenException;
+import exception.register.InvalidTokenException;
+import exception.register.ValidationException;
 import sql.SqlQueries;
-import util.EncryptionUtil;
-import util.ValidationUtil;
+import util.auth.ValidationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,17 +46,19 @@ public final class RegistrationService {
      * @throws RateLimitException      if the rate limit is exceeded
      * @see ValidationUtil validation rules
      */
-    public void createUser(String firstName, String lastName, String email, String password, LocalDate dob)
+    public void createUser(String firstName, String lastName, String email, SensitiveData password, LocalDate dob)
             throws SQLException, ValidationException, DuplicateEmailException, RateLimitException {
 
         var validationUtil = new ValidationUtil();
+
+        // Validate the email, first name, last name, and password
         validationUtil.validateEmail(email);
         validationUtil.validateName(firstName);
         validationUtil.validateName(lastName);
-        validationUtil.validatePassword(password);
+        // Validate the password
+        password.validateData();
 
-        var encryptionUtil = new EncryptionUtil();
-        password = encryptionUtil.encrypt(password);
+        EncryptedData encryptedPassword = password.encrypt();
 
         var dbRequest = new PostgresRequest();
 
@@ -61,7 +69,7 @@ public final class RegistrationService {
             }
         }
 
-        try (ResultSet resultSet = dbRequest.executeQuery(SqlQueries.ADD_USER, firstName, lastName, email, password, dob)){
+        try (ResultSet resultSet = dbRequest.executeQuery(SqlQueries.ADD_USER, firstName, lastName, email, encryptedPassword, dob)){
             if (!resultSet.next()) {
                 logger.error("User created but no UID returned");
                 throw new SQLException("No UID returned");

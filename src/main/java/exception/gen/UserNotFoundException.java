@@ -1,5 +1,8 @@
-package exception.user;
+package exception.gen;
 
+/**
+ * Exception for when a user is not found in the database.
+ */
 public class UserNotFoundException extends Exception {
 
     public static final String MESSAGE_ID = "user.not.found";

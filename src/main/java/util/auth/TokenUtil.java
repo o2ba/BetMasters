@@ -1,4 +1,4 @@
-package util;
+package util.auth;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Utility class for generating and verifying JWT tokens.
  */
-public class JwtUtil {
+public class TokenUtil {
 
     /**
      * The secret key used to sign the JWT.
@@ -96,5 +96,7 @@ public class JwtUtil {
             return false;
         }
     }
+
+
 
 }

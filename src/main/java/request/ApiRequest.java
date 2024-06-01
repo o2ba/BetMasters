@@ -1,4 +1,4 @@
-package builder;
+package request;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

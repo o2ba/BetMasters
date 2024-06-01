@@ -10,11 +10,7 @@ public final class SqlQueries {
     public static String DELETE_EMAIL_VERIFICATION_GET_UID_EXPIRY = "DELETE FROM email_verification WHERE token = ? RETURNING uid, expiry";
     public static String VERIFY_USER = "UPDATE users SET email_verified = true WHERE uid = ?";
     public static String DELETE_USER = "DELETE FROM users WHERE uid = ?";
-
     public static String GET_USER_BY_EMAIL = "SELECT * FROM users WHERE email = ?";
-    public static String GET_USER_BY_EMAIL_AND_PASSWORD = "SELECT * FROM users WHERE email = ? AND password = ?";
+    public static String GET_UID_FROM_REFRESH_TOKEN = "SELECT uid FROM refresh_tokens WHERE token = ?";
 
-    public static String STORE_REFRESH_TOKEN = "INSERT INTO refresh_tokens (token, uid, expiry) VALUES (?, ?, ?)";
-    public static String GET_USER_BY_REFRESH_TOKEN = "SELECT * FROM users INNER JOIN refresh_tokens ON users.uid = refresh_tokens.uid WHERE refresh_tokens.token = ?";
-    public static String INVALIDATE_REFRESH_TOKEN = "DELETE FROM refresh_tokens WHERE token = ?";
 }

@@ -1,4 +1,4 @@
-package exception.user;
+package exception.login;
 
 public class WrongEmailPasswordException extends Exception {
 
