@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.springframework.lang.Nullable;
 import request.PostgresRequest;
 import sql.SqlQueries;
-import util.auth.TokenUtil;
+import util.auth.JwtTokenUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,7 +27,7 @@ public class LoginLogoutService {
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(LoginLogoutService.class);
 
     /** Token utility class for generating JWT tokens. */
-    private static final TokenUtil jwtUtil = new TokenUtil();
+    private static final JwtTokenUtil jwtUtil = new JwtTokenUtil();
 
     /** PostgresRequest instance. */
     private final PostgresRequest postgresRequest = new PostgresRequest();

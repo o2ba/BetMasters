@@ -39,7 +39,6 @@ import java.util.Date;
  * <p>
  * This class provides the following public methods:
  * <ul>
- *     <li>{@link #generateEncryptedToken(String)}: Generates an encrypted JWT token.</li>
  *     <li>{@link #decryptToken(String)}: Decrypts a JWT token using the RSA algorithm.</li>
  *     <li>{@link #verifyToken(String)}: Verifies a JWT token.</li>
  * </ul>
@@ -58,7 +57,7 @@ import java.util.Date;
  * @see com.nimbusds.jose.crypto.RSADecrypter
  * @see com.nimbusds.jose.jwk.RSAKey
  */
-public class TokenUtil {
+public class JwtTokenUtil {
 
     /**
      * Static RSA key pair used for encrypting and decrypting JWT tokens.
@@ -92,15 +91,15 @@ public class TokenUtil {
     }
 
     /**
-     * Non-overloaded method to generate a JWT token. Token is not encrypted.
+     * Method to generate a JWT token. Token is not encrypted.
      * @param subject the subject of the token
      * @return the JWT token
      */
-    private String generateToken(String subject, int uid) {
+    private String generateToken(String subject, int uid, long lifetime) {
         return JWT.create()
                 .withSubject(subject)
                 .withClaim("uid", uid)
-                .withExpiresAt(new Date(System.currentTimeMillis() + DEFAULT_LIFETIME))
+                .withExpiresAt(new Date(System.currentTimeMillis() + lifetime))
                 .sign(Algorithm.none());
     }
 
@@ -124,9 +123,27 @@ public class TokenUtil {
 
     /**
      * Generates an encrypted JWT token.
+     * @param subject the subject of the token
+     * @param uid the user id
+     * @return the encrypted token
+     * @see #generateEncryptedToken(String, int, long)
      */
     public String generateEncryptedToken(String subject, int uid) throws JOSEException {
-        String payload = generateToken(subject, uid);
+        String payload = generateToken(subject, uid, DEFAULT_LIFETIME);
+        return encryptToken(payload);
+    }
+
+    /**
+     * Generates an encrypted JWT token.
+     * Overloaded method to allow for a custom lifetime.
+     * @param subject the subject of the token
+     * @param uid the user id
+     * @param lifetime the lifetime of the token in milliseconds
+     * @return the encrypted token
+     * @see #generateEncryptedToken(String, int)
+     */
+    public String generateEncryptedToken(String subject, int uid, long lifetime) throws JOSEException {
+        String payload = generateToken(subject, uid, lifetime);
         return encryptToken(payload);
     }
 
@@ -148,7 +165,6 @@ public class TokenUtil {
      */
     public DecodedJWT verifyToken(String jweString) throws Exception {
         JWTVerifier verifier = JWT.require(Algorithm.none()).build();
-        System.out.println(jweString);
         return verifier.verify(jweString);
     }
 
