@@ -61,7 +61,7 @@ public class LoginService {
         int uid = passWordUIDPayload.uid();
 
         // Check if what the user entered matches the hashed password
-        if (!password.matchesEncryptedString(hashedPassword)) {
+        if (!password.matchesEncryptedData(hashedPassword)) {
             // throws an exception if the email or password is incorrect
             throw new WrongEmailPasswordException();
         } else {

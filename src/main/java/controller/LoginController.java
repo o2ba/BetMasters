@@ -4,11 +4,8 @@ import exception.login.WrongEmailPasswordException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import object.security.SensitiveData;
-import okhttp3.Response;
-import org.apache.http.protocol.HTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import service.LoginService;
 import com.google.gson.Gson;
 
-import java.sql.SQLException;
 import java.util.Map;
 
 @Api(value = "LoginController")

@@ -44,7 +44,7 @@ public class RefreshTokenUtil {
      * @return true if the token is valid, false otherwise
      */
     public boolean validateToken(NonSensitiveData rawToken, EncryptedData hashedToken) {
-        return rawToken.matchesEncryptedString(hashedToken);
+        return rawToken.matchesEncryptedData(hashedToken);
     }
 
     // ------ Helper methods ------ //
