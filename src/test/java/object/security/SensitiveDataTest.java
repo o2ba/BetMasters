@@ -17,7 +17,7 @@ class SensitiveDataTest {
 
     @Test
     void testToString() {
-        SensitiveData data = new SensitiveData("password");
-        assertThrows(UnsupportedOperationException.class, data::toString);
+        SensitiveData data3 = new SensitiveData("password");
+        assertThrows(UnsupportedOperationException.class, data3::toString);
     }
 }
