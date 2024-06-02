@@ -11,17 +11,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import service.LoginService;
+import service.LoginLogoutService;
 import com.google.gson.Gson;
 
 import java.util.Map;
 
-@Api(value = "LoginController")
+@Api(value = "Login-Logout-Controller")
 @Controller
-public class LoginController {
+public class LoginLogoutController {
 
     /** Logger for the LoginController class */
-    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoginLogoutController.class);
 
     @PostMapping("/login")
     public ResponseEntity<String> login(
@@ -30,10 +30,10 @@ public class LoginController {
             @ApiParam(value = "lang", defaultValue = "fr") @RequestParam String lang
     ) {
 
-        LoginService loginService = new LoginService();
+        LoginLogoutService loginLogoutService = new LoginLogoutService();
 
         try {
-            Map<String, String> s = loginService.login(email, password);
+            Map<String, String> s = loginLogoutService.login(email, password);
             Gson gson = new Gson();
             String json = gson.toJson(s);
             return ResponseEntity.ok(json);
@@ -44,6 +44,23 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
 
+    }
+
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(
+            @ApiParam(value = "The ID of the user", required = true) @RequestParam int uid
+    ) {
+
+            LoginLogoutService loginLogoutService = new LoginLogoutService();
+
+            try {
+                loginLogoutService.logout(uid);
+                return ResponseEntity.ok("Logged out");
+            } catch (Exception e) {
+                logger.error("An error occurred while logging out", e);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+            }
     }
 
 }

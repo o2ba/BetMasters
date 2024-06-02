@@ -14,6 +14,7 @@ public final class SqlQueries {
 
     public static String ADD_REFRESH_TOKEN = "INSERT INTO refresh_tokens (token, uid, issue_date, expiry_date) VALUES (?, ?, ?, ?)";
     public static String GET_REFRESH_TOKEN = "SELECT token FROM refresh_tokens WHERE uid = ?";
+    public static String DELETE_ALL_REFRESH_TOKENS_FOR_USER = "DELETE FROM refresh_tokens WHERE uid = ?";
     public static String GET_UID_FROM_REFRESH_TOKEN = "SELECT uid FROM refresh_tokens WHERE token = ?";
 
 }

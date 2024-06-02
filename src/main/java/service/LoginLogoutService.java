@@ -21,10 +21,10 @@ import java.util.Map;
  * Controller class for handling login requests.
  * Using rotation of refresh tokens for persistent login.
  */
-public class LoginService {
+public class LoginLogoutService {
 
     /** Logger for the LoginService class. */
-    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(LoginService.class);
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(LoginLogoutService.class);
 
     /** Token utility class for generating JWT tokens. */
     private static final TokenUtil jwtUtil = new TokenUtil();
@@ -42,6 +42,7 @@ public class LoginService {
      * Logs in a user.
      * This method first encrypts the password and then checks if the email and password match.
      * Then, a token and a refresh token are generated and returned.
+     *
      * @param email the email of the user
      * @param password the password of the user
      * @return a map containing the token and refresh token
@@ -67,6 +68,9 @@ public class LoginService {
         } else {
             // get JWT token
             String token = jwtUtil.generateEncryptedToken(email, uid);
+
+            // Delete all refresh tokens for the user just in case
+            refreshTokenService.deleteAllRefreshTokensForUser(uid);
 
             // Generate a new refresh token
             NonSensitiveData refreshToken = refreshTokenService.generateRefreshToken();
@@ -98,6 +102,17 @@ public class LoginService {
             logger.error("Error while getting hashed password", e);
             throw new SQLException("Error while getting hashed password", e);
         }
+    }
+
+
+    /**
+     * Logs out a user.
+     * This method deletes all refresh tokens from the database for a given user.
+     * @param uid the user id
+     * @throws SQLException if an error occurs while executing the SQL query
+     */
+    public void logout(int uid) throws SQLException {
+        refreshTokenService.deleteAllRefreshTokensForUser(uid);
     }
 
 }

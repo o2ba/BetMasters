@@ -57,6 +57,13 @@ public class RefreshTokenService {
         );
     }
 
+    /**
+     * Deletes all refresh tokens for a given user id.
+     * @param uid the refresh token
+     */
+    public void deleteAllRefreshTokensForUser(int uid) throws SQLException {
+        postgresRequest.executeUpdate(SqlQueries.DELETE_ALL_REFRESH_TOKENS_FOR_USER, uid);
+    }
 
     /**
      * Gets the refresh token from the database for a given user id.
