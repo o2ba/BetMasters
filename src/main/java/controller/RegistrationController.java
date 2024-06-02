@@ -1,8 +1,14 @@
 package controller;
 
-import exception.user.*;
+import exception.gen.RateLimitException;
+import exception.gen.UserNotFoundException;
+import exception.register.DuplicateEmailException;
+import exception.register.ExpiredTokenException;
+import exception.register.InvalidTokenException;
+import exception.register.ValidationException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
+import object.security.SensitiveData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -13,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import service.RegistrationService;
-import util.SpringLanguageUtil;
+import util.spring.SpringLanguageUtil;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -44,7 +50,7 @@ public class RegistrationController {
             @ApiParam(value = "firstName") @RequestParam String firstName,
             @ApiParam(value = "lastName") @RequestParam String lastName,
             @ApiParam(value = "email") @RequestParam String email,
-            @ApiParam(value = "Password 8-50 chars") @RequestParam String password,
+            @ApiParam(value = "Password 8-50 chars") @RequestParam SensitiveData password,
             @ApiParam(value = "Language code", example = "en", defaultValue = "en") @RequestHeader String language,
             @ApiParam(value = "Date of birth in YYYY-MM-DD format", example = "2002-06-16")
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
@@ -59,7 +65,7 @@ public class RegistrationController {
             return ResponseEntity.status(429).body(langUtil.getMessage("rate.limit", language));
         } catch (SQLException e) {
             logger.error("SQL Exception: Unable to create account", e);
-            return ResponseEntity.status(429).body(langUtil.getMessage("unable.create.account", language));
+            return ResponseEntity.status(500).body(langUtil.getMessage("unable.create.account", language));
         } catch (ValidationException e) {
             logger.warn("Validation Failure in Backend! Injection Attack?");
             return ResponseEntity.status(422).body(e.getMessage());

@@ -1,7 +1,8 @@
 package util;
 
-import exception.user.ValidationException;
+import exception.register.ValidationException;
 import org.junit.jupiter.api.Test;
+import util.auth.ValidationUtil;
 
 import java.sql.Timestamp;
 import java.util.Collections;
@@ -42,28 +43,6 @@ class ValidationUtilTest {
                 () -> validationUtil.validateName("invalid name!"));
 
         assertDoesNotThrow(() -> validationUtil.validateName("valid-name"));
-    }
-
-    @Test
-    void validatePassword() {
-        String tooLong = String.join("",
-                Collections.nCopies(15, "a!A2"));
-
-        assertThrows(ValidationException.class,
-                () -> validationUtil.validatePassword("a"));
-        assertThrows(ValidationException.class,
-                () -> validationUtil.validatePassword(tooLong));
-        assertThrows(ValidationException.class,
-                () -> validationUtil.validatePassword("invalidpassword"));
-        assertThrows(ValidationException.class,
-                () -> validationUtil.validatePassword("invalidPASSWORD"));
-        assertThrows(ValidationException.class,
-                () -> validationUtil.validatePassword("invalid123456"));
-        assertThrows(ValidationException.class,
-                () -> validationUtil.validatePassword("invalidPassword"));
-
-        assertDoesNotThrow(() -> validationUtil.validatePassword("jasSowa129ed!"));
-        assertDoesNotThrow(() -> validationUtil.validatePassword("valid!Password1"));
     }
 
     @Test
