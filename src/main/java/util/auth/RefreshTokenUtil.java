@@ -7,10 +7,8 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.security.SecureRandom;
 
-
 /**
- * Utility class for generating and validating refresh tokens.
- * Refresh tokens are used for persistent login.
+ * Utility class for generating, hashing, and validating refresh tokens.
  */
 public class RefreshTokenUtil {
 
@@ -24,7 +22,7 @@ public class RefreshTokenUtil {
      * Generates a refresh token.
      * @return a refresh token
      */
-    public NonSensitiveData generateNewToken() {
+    public NonSensitiveData generateToken() {
         byte[] randomBytes = new byte[24];
         secureRandom.nextBytes(randomBytes);
         return new NonSensitiveData(Base64.getUrlEncoder().encodeToString(randomBytes));
@@ -46,7 +44,7 @@ public class RefreshTokenUtil {
      * @return true if the token is valid, false otherwise
      */
     public boolean validateToken(NonSensitiveData rawToken, EncryptedData hashedToken) {
-        return rawToken.matchesEncryptedString(hashedToken);
+        return rawToken.matchesEncryptedData(hashedToken);
     }
 
     // ------ Helper methods ------ //
@@ -64,7 +62,7 @@ public class RefreshTokenUtil {
      * Gets the expiry date of the refresh token.
      * This is the current date and time plus 15 days.
      */
-    public LocalDateTime issueExpiryDate() {
+    public LocalDateTime getExpiryDate() {
         return LocalDateTime.now().plusDays(DURATION_IN_DAYS);
     }
 

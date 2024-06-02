@@ -65,7 +65,7 @@ public class RegistrationController {
             return ResponseEntity.status(429).body(langUtil.getMessage("rate.limit", language));
         } catch (SQLException e) {
             logger.error("SQL Exception: Unable to create account", e);
-            return ResponseEntity.status(429).body(langUtil.getMessage("unable.create.account", language));
+            return ResponseEntity.status(500).body(langUtil.getMessage("unable.create.account", language));
         } catch (ValidationException e) {
             logger.warn("Validation Failure in Backend! Injection Attack?");
             return ResponseEntity.status(422).body(e.getMessage());

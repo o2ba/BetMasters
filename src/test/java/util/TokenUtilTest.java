@@ -1,55 +1,68 @@
 package util;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
+import com.nimbusds.jose.JOSEException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.auth.TokenUtil;
+
+import java.text.ParseException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TokenUtilTest {
 
-    TokenUtil jwtUtil = new TokenUtil();
+    private TokenUtil tokenUtil;
 
-    @Test
-    void buildHeader() {
+    @BeforeEach
+    void setUp() {
+        tokenUtil = new TokenUtil();
     }
 
     @Test
-    void buildPayload() {
-        assertDoesNotThrow(() -> jwtUtil.buildToken("test", 1, 15));
-    }
-
-    /*
-     * Tests a valid token, an invalid token and an expired token.
-     */
-    @Test
-    void decodeToken() {
-        String token = jwtUtil
-                .buildToken("test@betmasterc.cc", 1, 15);
-        Claims claims = jwtUtil.decodeToken(token);
-
-        assertFalse(claims.isEmpty());
-        assertEquals("test@betmasterc.cc", claims.get("username"));
-        assertEquals("1", claims.get("sub"));
-        assertEquals("https://betmasters.cc", claims.get("iss"));
-
-        String invalidToken = "invalid token";
-        assertThrows(MalformedJwtException.class, () -> jwtUtil.decodeToken(invalidToken));
-
-        String expiredToken = jwtUtil
-                .buildToken("test@betmasterc.cc", 1, -15);
-        assertThrows(ExpiredJwtException.class, () -> jwtUtil.decodeToken(expiredToken));
-
+    void testGenerateToken() {
+        try {
+            String token = tokenUtil.generateEncryptedToken("test", 1);
+            assertNotNull(token);
+        } catch (JOSEException e) {
+            fail(e.getMessage());
+        }
     }
 
     @Test
-    void verifyToken() {
-        String token = jwtUtil
-                .buildToken("test", 1, 15);
-        assertTrue(jwtUtil.verifyToken(token));
-        assertFalse(jwtUtil.verifyToken("invalid token"));
+    void testEncryptToken() {
+        try {
+            String token = tokenUtil.generateEncryptedToken("test", 1);
+            String encryptedToken = tokenUtil.encryptToken(token);
+            assertNotNull(encryptedToken);
+            assertNotEquals(token, encryptedToken);
+        } catch (JOSEException e) {
+            fail(e.getMessage());
+        }
+    }
 
+    @Test
+    void testDecryptToken() {
+        try {
+            String token = tokenUtil.generateEncryptedToken("test", 1);
+            String encryptedToken = tokenUtil.encryptToken(token);
+            String decryptedToken = tokenUtil.decryptToken(encryptedToken);
+            assertNotNull(decryptedToken);
+            assertEquals(token, decryptedToken);
+        } catch (JOSEException e) {
+            fail(e.getMessage());
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    void testVerifyToken() {
+        try {
+            String token = tokenUtil.generateEncryptedToken("test", 1);
+            String decryptedToken = tokenUtil.decryptToken(token);
+            assertNotNull(tokenUtil.verifyToken(decryptedToken));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 }

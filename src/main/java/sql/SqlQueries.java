@@ -11,6 +11,9 @@ public final class SqlQueries {
     public static String VERIFY_USER = "UPDATE users SET email_verified = true WHERE uid = ?";
     public static String DELETE_USER = "DELETE FROM users WHERE uid = ?";
     public static String GET_USER_BY_EMAIL = "SELECT * FROM users WHERE email = ?";
+
+    public static String ADD_REFRESH_TOKEN = "INSERT INTO refresh_tokens (token, uid, issue_date, expiry_date) VALUES (?, ?, ?, ?)";
+    public static String GET_REFRESH_TOKEN = "SELECT token FROM refresh_tokens WHERE uid = ?";
     public static String GET_UID_FROM_REFRESH_TOKEN = "SELECT uid FROM refresh_tokens WHERE token = ?";
 
 }

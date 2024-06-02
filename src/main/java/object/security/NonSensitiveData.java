@@ -52,7 +52,7 @@ public class NonSensitiveData {
      * @param encryptedString the encrypted string
      * @return true if the raw data matches the encrypted string, false otherwise
      */
-    public boolean matchesEncryptedString(EncryptedData encryptedString) {
+    public boolean matchesEncryptedData(EncryptedData encryptedString) {
         return passwordEncoder.matches(rawData, encryptedString.encryptedData());
     }
 
