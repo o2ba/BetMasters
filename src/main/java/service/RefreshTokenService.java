@@ -50,12 +50,13 @@ public class RefreshTokenService {
     public void encryptAndSaveToken(NonSensitiveData refreshToken, int uid) throws SQLException {
         postgresRequest.executeUpdate(
                 SqlQueries.ADD_REFRESH_TOKEN,
-                refreshTokenUtil.hashToken(refreshToken),
+                refreshToken.encrypt().toString(),
                 uid,
                 refreshTokenUtil.getIssueDate(),
                 refreshTokenUtil.getExpiryDate()
         );
     }
+
 
     /**
      * Gets the refresh token from the database for a given user id.

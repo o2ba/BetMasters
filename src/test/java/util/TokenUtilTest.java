@@ -21,7 +21,7 @@ class TokenUtilTest {
     @Test
     void testGenerateToken() {
         try {
-            String token = tokenUtil.generateEncryptedToken("test");
+            String token = tokenUtil.generateEncryptedToken("test", 1);
             assertNotNull(token);
         } catch (JOSEException e) {
             fail(e.getMessage());
@@ -31,7 +31,7 @@ class TokenUtilTest {
     @Test
     void testEncryptToken() {
         try {
-            String token = tokenUtil.generateEncryptedToken("test");
+            String token = tokenUtil.generateEncryptedToken("test", 1);
             String encryptedToken = tokenUtil.encryptToken(token);
             assertNotNull(encryptedToken);
             assertNotEquals(token, encryptedToken);
@@ -43,7 +43,7 @@ class TokenUtilTest {
     @Test
     void testDecryptToken() {
         try {
-            String token = tokenUtil.generateEncryptedToken("test");
+            String token = tokenUtil.generateEncryptedToken("test", 1);
             String encryptedToken = tokenUtil.encryptToken(token);
             String decryptedToken = tokenUtil.decryptToken(encryptedToken);
             assertNotNull(decryptedToken);
@@ -58,7 +58,7 @@ class TokenUtilTest {
     @Test
     void testVerifyToken() {
         try {
-            String token = tokenUtil.generateEncryptedToken("test");
+            String token = tokenUtil.generateEncryptedToken("test", 1);
             String decryptedToken = tokenUtil.decryptToken(token);
             assertNotNull(tokenUtil.verifyToken(decryptedToken));
         } catch (Exception e) {

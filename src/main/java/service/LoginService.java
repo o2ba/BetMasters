@@ -5,6 +5,7 @@ import exception.login.WrongEmailPasswordException;
 import object.security.EncryptedData;
 import object.security.NonSensitiveData;
 import object.security.SensitiveData;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.springframework.lang.Nullable;
 import request.PostgresRequest;
@@ -25,9 +26,6 @@ public class LoginService {
     /** Logger for the LoginService class. */
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(LoginService.class);
 
-    /** Default expiry time for a token. */
-    private static final long EXPIRY_TIME_DEFAULT = 1000L * 60L * 60L; // 60 minutes
-
     /** Token utility class for generating JWT tokens. */
     private static final TokenUtil jwtUtil = new TokenUtil();
 
@@ -37,6 +35,8 @@ public class LoginService {
     /** RefreshTokenService instance. */
     private final RefreshTokenService refreshTokenService = new RefreshTokenService();
 
+    /** Record the password and uid. */
+    public record PassWordUIDPayload (@NotNull EncryptedData password, int uid) { }
 
     /**
      * Logs in a user.
@@ -50,23 +50,31 @@ public class LoginService {
      */
     public Map<String, String> login(String email, SensitiveData password)
             throws SQLException, WrongEmailPasswordException, JOSEException {
-        EncryptedData hashedPassword = getHashedPassword(email);
-        if (hashedPassword == null || !password.matchesEncryptedString(hashedPassword)) {
+
+        // Get the hashed password and uid from the database
+        PassWordUIDPayload passWordUIDPayload = getHashedPassword(email);
+
+        // If the email is not found, throw an exception
+        if (passWordUIDPayload == null) throw new WrongEmailPasswordException();
+
+        EncryptedData hashedPassword = passWordUIDPayload.password();
+        int uid = passWordUIDPayload.uid();
+
+        // Check if what the user entered matches the hashed password
+        if (!password.matchesEncryptedString(hashedPassword)) {
             // throws an exception if the email or password is incorrect
             throw new WrongEmailPasswordException();
         } else {
-            // request JWT token
-            // String token = jwtUtil.buildToken(email, EXPIRY_TIME_DEFAULT);
-            
+            // get JWT token
+            String token = jwtUtil.generateEncryptedToken(email, uid);
+
             // Generate a new refresh token
             NonSensitiveData refreshToken = refreshTokenService.generateRefreshToken();
-            // Encrypt and save the refresh token
-            // refreshTokenService.encryptAndSaveToken(refreshToken, email);
+            // Encrypt and save the encrypted refresh token to the database
+            refreshTokenService.encryptAndSaveToken(refreshToken, uid);
 
-
+            return Map.of("token", token, "refreshToken", refreshToken.toString());
         }
-
-        return null;
     }
 
     /**
@@ -75,11 +83,15 @@ public class LoginService {
      * @throws SQLException if an error occurs while executing the SQL query
      */
     @Nullable
-    private EncryptedData getHashedPassword(String email) throws SQLException {
+    private PassWordUIDPayload getHashedPassword(String email) throws SQLException {
         try (ResultSet resultSet = postgresRequest.executeQuery(SqlQueries.GET_USER_BY_EMAIL, email)) {
             if (resultSet.next()) {
-                return new EncryptedData(resultSet.getString("password"));
+                return new PassWordUIDPayload(
+                        new EncryptedData(resultSet.getString("password")),
+                        resultSet.getInt("uid")
+                );
             } else {
+                // return null if the email is not found
                 return null;
             }
         } catch (SQLException e) {
@@ -87,8 +99,5 @@ public class LoginService {
             throw new SQLException("Error while getting hashed password", e);
         }
     }
-
-
-
 
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import service.LoginService;
+import com.google.gson.Gson;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -37,7 +38,9 @@ public class LoginController {
 
         try {
             Map<String, String> s = loginService.login(email, password);
-            return ResponseEntity.ok(s.get("token"));
+            Gson gson = new Gson();
+            String json = gson.toJson(s);
+            return ResponseEntity.ok(json);
         } catch (WrongEmailPasswordException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong email or password");
         } catch (Exception e) {

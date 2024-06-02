@@ -21,12 +21,8 @@ public record EncryptedData(String encryptedData) {
         }
     }
 
-    /**
-     * Returns the encrypted data.
-     *
-     * @return the encrypted data
-     */
-    public String getEncryptedData() {
+    @Override
+    public String toString() {
         return encryptedData;
     }
 }
