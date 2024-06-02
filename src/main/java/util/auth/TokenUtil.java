@@ -1,7 +1,9 @@
 package util.auth;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.*;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -10,7 +12,10 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
+import java.text.ParseException;
 import java.util.Date;
+
+import static java.security.KeyRep.Type.SECRET;
 
 /**
  * Utility class for generating and verifying JWT tokens.
@@ -30,6 +35,8 @@ public class TokenUtil {
      * Default lifetime of a JWT token in milliseconds.
      */
     private static final long DEFAULT_LIFETIME =  1000 * 60 * 60; // 1 hour
+
+    // -- Private methods -- //
 
     /**
      * Generates a new RSA key pair.
@@ -51,7 +58,7 @@ public class TokenUtil {
      * @param subject the subject of the token
      * @return the JWT token
      */
-    public String generateToken(String subject) {
+    private String generateToken(String subject) {
         return JWT.create()
                 .withSubject(subject)
                 .withExpiresAt(new Date(System.currentTimeMillis() + DEFAULT_LIFETIME))
@@ -59,25 +66,12 @@ public class TokenUtil {
     }
 
     /**
-     * Generates a JWT token with a custom lifetime. Token is not encrypted.
-     * Overloaded from {@link #generateToken(String)}
-     * @param subject the subject of the token
-     * @param lifetime the lifetime of the token in milliseconds
-     * @return the JWT token
-     */
-    public String generateToken(String subject, long lifetime) {
-        return JWT.create()
-                .withSubject(subject)
-                .withExpiresAt(new Date(System.currentTimeMillis() + lifetime))
-                .sign(Algorithm.none());
-    }
-
-    /**
      * Encrypts a JWT token using the RSA algorithm.
-     * @param payload the payload of the token
+     * @param payload the token to encrypt
      *
      */
     public String encryptToken(String payload) throws JOSEException {
+
         JWEObject jweObject = new JWEObject(
             new JWEHeader(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128GCM),
             new Payload(payload)
@@ -86,15 +80,37 @@ public class TokenUtil {
         return jweObject.serialize();
     }
 
+
+    // -- Public methods -- //
+
+    /**
+     * Generates an encrypted JWT token.
+     */
+    public String generateEncryptedToken(String subject) throws JOSEException {
+        String payload = generateToken(subject);
+        return encryptToken(payload);
+    }
+
     /**
      * Decrypts a JWT token using the RSA algorithm.
      * @param jweString the encrypted token
      * @return the decrypted token
      */
-    public String decryptToken(String jweString) throws Exception {
+    public String decryptToken(String jweString) throws ParseException, JOSEException{
         JWEObject jweObject = JWEObject.parse(jweString);
         jweObject.decrypt(new RSADecrypter(RSA_KEY.toRSAPrivateKey()));
         return jweObject.getPayload().toString();
+    }
+
+    /**
+     * Verifies a JWT token.
+     * @param jweString the encrypted token
+     * @return the decoded token
+     */
+    public DecodedJWT verifyToken(String jweString) throws Exception {
+        JWTVerifier verifier = JWT.require(Algorithm.none()).build();
+        System.out.println(jweString);
+        return verifier.verify(jweString);
     }
 
 

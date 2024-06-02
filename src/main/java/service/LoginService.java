@@ -56,7 +56,7 @@ public class LoginService {
             throw new WrongEmailPasswordException();
         } else {
             // request JWT token
-            String token = jwtUtil.buildToken(email, EXPIRY_TIME_DEFAULT);
+            // String token = jwtUtil.buildToken(email, EXPIRY_TIME_DEFAULT);
             
             // Generate a new refresh token
             NonSensitiveData refreshToken = refreshTokenService.generateRefreshToken();

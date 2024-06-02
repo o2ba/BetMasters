@@ -1,9 +1,6 @@
 package util;
 
 import com.nimbusds.jose.JOSEException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.auth.TokenUtil;
@@ -22,42 +19,50 @@ class TokenUtilTest {
     }
 
     @Test
-    void testBuildToken() throws JOSEException {
-        String token = tokenUtil.buildToken("test@betmasterc.cc", 15);
-        assertNotNull(token);
+    void testGenerateToken() {
+        try {
+            String token = tokenUtil.generateEncryptedToken("test");
+            assertNotNull(token);
+        } catch (JOSEException e) {
+            fail(e.getMessage());
+        }
     }
 
     @Test
-    void testDecodeToken() throws JOSEException, ParseException {
-        String token = tokenUtil.buildToken("test@betmasterc.cc", 15);
-        Claims claims = tokenUtil.decodeToken(token);
-
-        assertFalse(claims.isEmpty());
-        assertEquals("test@betmasterc.cc", claims.get("sub"));
-        assertEquals("https://betmasters.cc", claims.get("iss"));
+    void testEncryptToken() {
+        try {
+            String token = tokenUtil.generateEncryptedToken("test");
+            String encryptedToken = tokenUtil.encryptToken(token);
+            assertNotNull(encryptedToken);
+            assertNotEquals(token, encryptedToken);
+        } catch (JOSEException e) {
+            fail(e.getMessage());
+        }
     }
 
     @Test
-    void testDecodeTokenWithInvalidToken() {
-        String invalidToken = "invalid token";
-        assertThrows(MalformedJwtException.class, () -> tokenUtil.decodeToken(invalidToken));
+    void testDecryptToken() {
+        try {
+            String token = tokenUtil.generateEncryptedToken("test");
+            String encryptedToken = tokenUtil.encryptToken(token);
+            String decryptedToken = tokenUtil.decryptToken(encryptedToken);
+            assertNotNull(decryptedToken);
+            assertEquals(token, decryptedToken);
+        } catch (JOSEException e) {
+            fail(e.getMessage());
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    void testDecodeTokenWithExpiredToken() throws JOSEException {
-        String expiredToken = tokenUtil.buildToken("test@betmasterc.cc", -15);
-        assertThrows(ExpiredJwtException.class, () -> tokenUtil.decodeToken(expiredToken));
-    }
-
-    @Test
-    void testVerifyToken() throws JOSEException {
-        String token = tokenUtil.buildToken("test@betmasterc.cc", 15);
-        assertTrue(tokenUtil.verifyToken(token));
-    }
-
-    @Test
-    void testVerifyTokenWithInvalidToken() {
-        String invalidToken = "invalid token";
-        assertFalse(tokenUtil.verifyToken(invalidToken));
+    void testVerifyToken() {
+        try {
+            String token = tokenUtil.generateEncryptedToken("test");
+            String decryptedToken = tokenUtil.decryptToken(token);
+            assertNotNull(tokenUtil.verifyToken(decryptedToken));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 }
