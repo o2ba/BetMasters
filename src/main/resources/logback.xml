@@ -3,17 +3,8 @@
         <instrumentationKey>dfb7bef5-6997-4004-824c-e42648775af3</instrumentationKey>
     </appender>
 
-
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>logFile.log</file>
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
-
     <root level="info">
         <appender-ref ref="aiAppender" />
-        <appender-ref ref="FILE" />
     </root>
 
 
