@@ -1,14 +1,14 @@
 package controller;
 
-import exception.gen.RateLimitException;
-import exception.gen.UserNotFoundException;
-import exception.register.DuplicateEmailException;
-import exception.register.ExpiredTokenException;
-import exception.register.InvalidTokenException;
-import exception.register.ValidationException;
+import common.exception.gen.RateLimitException;
+import common.exception.gen.UserNotFoundException;
+import common.exception.register.DuplicateEmailException;
+import common.exception.register.ExpiredTokenException;
+import common.exception.register.InvalidTokenException;
+import common.exception.register.ValidationException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import object.security.SensitiveData;
+import common.object.security.SensitiveData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
-import service.RegistrationService;
-import util.spring.SpringLanguageUtil;
+import service.registration.RegistrationService;
+import common.util.spring.SpringLanguageUtil;
 
 import java.sql.SQLException;
 import java.time.LocalDate;

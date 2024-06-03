@@ -1,10 +1,10 @@
 package service;
 
-import object.security.NonSensitiveData;
+import common.object.security.NonSensitiveData;
 import org.jetbrains.annotations.Nullable;
-import request.PostgresRequest;
-import sql.SqlQueries;
-import util.auth.RefreshTokenUtil;
+import dto.request.PostgresRequest;
+import common.config.SqlQueries;
+import common.util.auth.RefreshTokenUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

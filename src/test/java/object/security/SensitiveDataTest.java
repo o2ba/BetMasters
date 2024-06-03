@@ -1,6 +1,7 @@
 package object.security;
 
-import exception.register.ValidationException;
+import common.exception.register.ValidationException;
+import common.object.security.SensitiveData;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

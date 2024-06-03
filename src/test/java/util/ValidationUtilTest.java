@@ -1,8 +1,8 @@
 package util;
 
-import exception.register.ValidationException;
+import common.exception.register.ValidationException;
 import org.junit.jupiter.api.Test;
-import util.auth.ValidationUtil;
+import common.util.auth.ValidationUtil;
 
 import java.sql.Timestamp;
 import java.util.Collections;

@@ -1,9 +1,9 @@
 package controller;
 
-import exception.login.WrongEmailPasswordException;
+import common.exception.login.WrongEmailPasswordException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import object.security.SensitiveData;
+import common.object.security.SensitiveData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

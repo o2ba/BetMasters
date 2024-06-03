@@ -3,7 +3,7 @@ package util;
 import com.nimbusds.jose.JOSEException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import util.auth.JwtTokenUtil;
+import common.util.auth.JwtTokenUtil;
 
 import java.text.ParseException;
 

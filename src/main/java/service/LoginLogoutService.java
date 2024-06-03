@@ -1,16 +1,16 @@
 package service;
 
 import com.nimbusds.jose.JOSEException;
-import exception.login.WrongEmailPasswordException;
-import object.security.EncryptedData;
-import object.security.NonSensitiveData;
-import object.security.SensitiveData;
+import common.exception.login.WrongEmailPasswordException;
+import common.object.security.EncryptedData;
+import common.object.security.NonSensitiveData;
+import common.object.security.SensitiveData;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.springframework.lang.Nullable;
-import request.PostgresRequest;
-import sql.SqlQueries;
-import util.auth.JwtTokenUtil;
+import dto.request.PostgresRequest;
+import common.config.SqlQueries;
+import common.util.auth.JwtTokenUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
