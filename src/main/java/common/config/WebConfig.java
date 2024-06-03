@@ -1,6 +1,6 @@
 package common.config;
 
-import common.util.spring.StringToSensitiveDataConverterUtil;
+import service.general.springService.StringToSensitiveDataConverterUtil;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

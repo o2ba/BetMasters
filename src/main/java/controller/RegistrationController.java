@@ -3,20 +3,25 @@ package controller;
 import common.exception.gen.RateLimitException;
 import common.exception.register.DuplicateEmailException;
 import common.exception.register.ValidationException;
+import common.object.security.SensitiveData;
+import service.general.springService.SpringLanguageUtil;
+import service.general.__deprecated.user.UserUtil;
+import service.general.__deprecated.user.implementations.InputValidationManager;
+import dto.request.PostgresRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import common.object.security.SensitiveData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
-import service.userService.publicRequests.register.RegistrationService;
-import common.util.spring.SpringLanguageUtil;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+import service.app.userService.publicRequest.register.RegistrationService;
+import service.app.userService.publicRequest.register.UserCreation;
+import service.app.userService.publicRequest.register.UserCreationImpl;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -53,7 +58,14 @@ public class RegistrationController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
 
     ) {
-        RegistrationService registrationService = new RegistrationService();
+        RegistrationService registrationService = new RegistrationService(
+            new UserCreationImpl(
+                    new InputValidationManager(),
+                    new UserUtil(),
+                    LoggerFactory.getLogger(UserCreation.class),
+                    new PostgresRequest()
+            )
+        );
         try {
             registrationService.createUser(firstName, lastName, email, password, date);
         } catch (DuplicateEmailException e) {
@@ -64,7 +76,7 @@ public class RegistrationController {
             logger.error("SQL Exception: Unable to create account", e);
             return ResponseEntity.status(500).body(langUtil.getMessage("unable.create.account", language));
         } catch (ValidationException e) {
-            logger.warn("Validation Failure in Backend! Injection Attack?");
+            logger.warn("InputValidation Failure in Backend! Injection Attack?");
             return ResponseEntity.status(422).body(e.getMessage());
         } catch (Exception e) {
             logger.error("Unknown Exception: Unable to create account", e);

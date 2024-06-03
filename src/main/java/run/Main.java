@@ -9,7 +9,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableWebMvc
 @EnableSwagger2
-@ComponentScan(basePackages = {"controller", "service", "config"})
+@ComponentScan(basePackages = {"controller", "service", "service", "service.general"})
 public class Main {
 
     public static void main(String[] args) {
