@@ -1,4 +1,4 @@
-package service;
+package service.userService.publicRequests.login;
 
 import com.nimbusds.jose.JOSEException;
 import common.exception.login.WrongEmailPasswordException;
@@ -11,6 +11,7 @@ import org.springframework.lang.Nullable;
 import dto.request.PostgresRequest;
 import common.config.SqlQueries;
 import common.util.auth.JwtTokenUtil;
+import service.tokenService.RefreshTokenService;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -105,14 +106,5 @@ public class LoginLogoutService {
     }
 
 
-    /**
-     * Logs out a user.
-     * This method deletes all refresh tokens from the database for a given user.
-     * @param uid the user id
-     * @throws SQLException if an error occurs while executing the SQL query
-     */
-    public void logout(int uid) throws SQLException {
-        refreshTokenService.deleteAllRefreshTokensForUser(uid);
-    }
 
 }

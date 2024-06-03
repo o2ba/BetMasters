@@ -1,10 +1,7 @@
 package controller;
 
 import common.exception.gen.RateLimitException;
-import common.exception.gen.UserNotFoundException;
 import common.exception.register.DuplicateEmailException;
-import common.exception.register.ExpiredTokenException;
-import common.exception.register.InvalidTokenException;
 import common.exception.register.ValidationException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -18,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
-import service.registration.RegistrationService;
+import service.userService.publicRequests.register.RegistrationService;
 import common.util.spring.SpringLanguageUtil;
 
 import java.sql.SQLException;
@@ -82,10 +79,10 @@ public class RegistrationController {
     }
 
 
-    /**
+    /*
      * Verifies the email of a user
      * @param emailToken the token sent to the user's email
-     */
+
     @PostMapping("/verifyEmail")
     public ResponseEntity<String> verifyEmail(
             @ApiParam(value = "token") @RequestParam String emailToken,
@@ -118,34 +115,7 @@ public class RegistrationController {
                 langUtil.getMessage("email.verification.success", language)
         );
     }
+    */
 
-    @PostMapping("/deleteUser")
-    public ResponseEntity<String> deleteAccount(
-            @ApiParam(value = "uid") @RequestParam int uid,
-            @ApiParam(value = "Language code", example = "en", defaultValue = "en") @RequestHeader String language
-    ) {
-        RegistrationService registrationService = new RegistrationService();
-        try {
-            registrationService.deleteUser(uid);
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.status(422).body(
-                    langUtil.getMessage(UserNotFoundException.MESSAGE_ID, language));
-        } catch (SQLException e) {
-            logger.error("SQL Exception: Unable to delete account", e);
-            return ResponseEntity.status(422).body(
-                    langUtil.getMessage("unable.delete.account", language));
-        } catch (Exception e) {
-            logger.error("Unknown Exception: Unable to delete account", e);
-            return ResponseEntity.status(422).body(
-                    langUtil.getMessage("unable.delete.account", language)
-            );
-        }
-
-        return ResponseEntity.status(201).body(
-                langUtil.getMessage("user.deleted", language)
-        );
-    }
-
-    // TODO Reset password
 
 }

@@ -1,4 +1,4 @@
-package service.authentication;
+package service.tokenService;
 
 import common.util.auth.JwtTokenUtil;
 

@@ -1,4 +1,4 @@
-package service;
+package service.tokenService;
 
 import common.object.security.NonSensitiveData;
 import org.jetbrains.annotations.Nullable;

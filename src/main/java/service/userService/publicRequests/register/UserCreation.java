@@ -1,10 +1,7 @@
-package service.registration;
+package service.userService.publicRequests.register;
 
 import common.annotation.DatabaseOperation;
 import common.object.security.SensitiveData;
-import common.util.auth.UserUtil;
-import common.util.auth.ValidationUtil;
-import dto.request.PostgresRequest;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -12,19 +9,7 @@ import java.time.LocalDate;
 /**
  * Handles the logic for creating a user.
  */
-public interface IUserCreation {
-
-    /** @see ValidationUtil */
-    ValidationUtil validationUtil = new ValidationUtil();
-
-    /** @see PostgresRequest */
-    PostgresRequest postgresRequest = new PostgresRequest();
-
-    /** @see org.slf4j.Logger */
-    org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(IUserCreation.class);
-
-    /** @see UserUtil */
-    UserUtil userUtil = new UserUtil();
+public interface UserCreation {
 
     /** SQL Queries **/
     enum SQLQueries {

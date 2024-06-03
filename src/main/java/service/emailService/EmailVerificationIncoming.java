@@ -1,6 +1,6 @@
-package service.emailVerification;
+package service.emailService;
 
-public interface IEmailVerificationIncoming {
+public interface EmailVerificationIncoming {
     void sendVerificationEmail(String email, String token);
     void verifyEmail(String token);
 }

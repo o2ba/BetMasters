@@ -1,4 +1,4 @@
-package service.authentication.interfaces;
+package service.tokenService.interfaces;
 
 
 /**

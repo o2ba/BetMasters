@@ -1,4 +1,4 @@
-package service;
+package service.fixtureService;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import service.LoginLogoutService;
+import service.userService.publicRequests.login.LoginLogoutService;
 import com.google.gson.Gson;
 
 import java.util.Map;

@@ -1,4 +1,4 @@
-package service.registration;
+package service.userService.publicRequests.register;
 
 
 import common.annotation.RateLimited;
@@ -6,8 +6,9 @@ import common.object.security.SensitiveData;
 import common.exception.gen.RateLimitException;
 import common.exception.register.DuplicateEmailException;
 import common.exception.register.ValidationException;
+import common.util.auth.UserUtil;
 import common.util.auth.ValidationUtil;
-import org.slf4j.Logger;
+import dto.request.PostgresRequest;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
@@ -19,7 +20,12 @@ import java.time.LocalDate;
 public final class RegistrationService {
 
     /** UserCreationImpl object */
-    private final UserCreationImpl userCreationImpl = new UserCreationImpl();
+    private final UserCreationImpl userCreationImpl = new UserCreationImpl(
+            new ValidationUtil(),
+            new UserUtil(),
+            LoggerFactory.getLogger(UserCreation.class),
+            new PostgresRequest()
+    );
 
     /**
      * Creates a new user.

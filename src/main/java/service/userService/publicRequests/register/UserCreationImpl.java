@@ -1,14 +1,37 @@
-package service.registration;
+package service.userService.publicRequests.register;
 
 import common.annotation.DatabaseOperation;
 import common.exception.register.ValidationException;
 import common.object.security.SensitiveData;
+import common.util.auth.UserUtil;
+import common.util.auth.ValidationUtil;
+import dto.request.PostgresRequest;
+import org.slf4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-public class UserCreationImpl implements IUserCreation {
+public final class UserCreationImpl implements UserCreation {
+
+    private final ValidationUtil validationUtil;
+    private final UserUtil userUtil;
+    private final Logger logger;
+    private final PostgresRequest postgresRequest;
+
+    /**
+     * Passes the necessary objects to the UserCreationImpl object.
+     * @see ValidationUtil
+     * @see UserUtil
+     * @see Logger
+     * @see PostgresRequest
+     */
+    public UserCreationImpl(ValidationUtil validationUtil, UserUtil userUtil, Logger logger, PostgresRequest postgresRequest) {
+        this.validationUtil = validationUtil;
+        this.userUtil = userUtil;
+        this.logger = logger;
+        this.postgresRequest = postgresRequest;
+    }
 
     /**
      * Validates the input for creating a user.
