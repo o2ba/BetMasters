@@ -14,7 +14,7 @@ import service.general.authService.jwtTokenService.jwt.RuntimeSecretKeyGenerator
 import java.text.ParseException;
 
 @Service
-public final class EncryptedJwtTokenService implements EncryptedJwtToken {
+public final class JwtTokenServiceImpl implements JwtTokenService {
 
     RsaEncryptDecryptMessage rsaEncryptDecrypt;
     JwtToken jwtToken;
@@ -22,10 +22,10 @@ public final class EncryptedJwtTokenService implements EncryptedJwtToken {
     RuntimeSecretKeyGenerator runtimeSecretKeyGenerator;
 
     @Autowired
-    public EncryptedJwtTokenService(RsaEncryptDecryptMessage rsaEncryptDecrypt,
-                                    JwtToken jwtToken,
-                                    RuntimeRsaKeyGenerator runtimeRsaKeyGenerator,
-                                    RuntimeSecretKeyGenerator runtimeSecretKeyGenerator) {
+    public JwtTokenServiceImpl(RsaEncryptDecryptMessage rsaEncryptDecrypt,
+                               JwtToken jwtToken,
+                               RuntimeRsaKeyGenerator runtimeRsaKeyGenerator,
+                               RuntimeSecretKeyGenerator runtimeSecretKeyGenerator) {
         this.rsaEncryptDecrypt = rsaEncryptDecrypt;
         this.jwtToken = jwtToken;
         this.runtimeRsaKeyGenerator = runtimeRsaKeyGenerator;
@@ -42,7 +42,7 @@ public final class EncryptedJwtTokenService implements EncryptedJwtToken {
      */
     @NotNull
     @Override
-    public String generateEncryptedToken(String subject, int uid, long lifetime)
+    public String generateEncryptedToken(String subject, int uid, Long lifetime)
     throws JOSEException {
         String token = jwtToken.generateToken(subject, uid, lifetime, runtimeSecretKeyGenerator.getKey());
         return rsaEncryptDecrypt.encryptMessage(token, runtimeRsaKeyGenerator.getKey());

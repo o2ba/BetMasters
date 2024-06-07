@@ -3,7 +3,7 @@ package service.general.authService.jwtTokenService;
 import com.nimbusds.jose.JOSEException;
 import org.jetbrains.annotations.NotNull;
 
-public interface EncryptedJwtToken {
+public interface JwtTokenService {
 
     /**
      * Generates an RSA-Encrypted JWT token for the given subject and user ID.
@@ -11,10 +11,10 @@ public interface EncryptedJwtToken {
      * @param subject  the subject of the token
      * @param uid      the user ID
      * @param lifetime the lifetime of the token in milliseconds
-     * @return the generated token
+     * @return the generated token. This token can be directly sent to the user.
      */
     @NotNull
-    String generateEncryptedToken(String subject, int uid, long lifetime) throws JOSEException;
+    String generateEncryptedToken(String subject, int uid, Long lifetime) throws JOSEException;
 
     /**
      * Checks if a token corresponds to a user.

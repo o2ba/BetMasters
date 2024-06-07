@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class EncryptedJwtTokenServiceTest {
 
     @Autowired
-    private EncryptedJwtTokenService encryptedJwtTokenService;
+    private JwtTokenServiceImpl jwtTokenServiceImpl;
 
     @Autowired
     private RsaEncryptDecryptMessage rsaEncryptDecryptMessage;
@@ -33,8 +33,8 @@ class EncryptedJwtTokenServiceTest {
 
     @Test
     void generateEncryptedToken() throws Exception {
-        encryptedJwtTokenService.generateEncryptedToken(
-                "person@example.org", 1, 1000
+        jwtTokenServiceImpl.generateEncryptedToken(
+                "person@example.org", 1, 1000L
         );
     }
 
@@ -42,20 +42,20 @@ class EncryptedJwtTokenServiceTest {
     // No error cases
     @Test
     void verifyEncryptedToken() throws Exception {
-        String token = encryptedJwtTokenService.generateEncryptedToken(
-                "person@example.org", 1, 3000
+        String token = jwtTokenServiceImpl.generateEncryptedToken(
+                "person@example.org", 1, 3000L
         );
 
         // All goes good. The token is verified.
-        assertTrue(encryptedJwtTokenService.verifyEncryptedToken(token,
+        assertTrue(jwtTokenServiceImpl.verifyEncryptedToken(token,
                 "person@example.org",
                 1));
         // The subject is wrong. The token is not verified.
-        assertFalse(encryptedJwtTokenService.verifyEncryptedToken(token,
+        assertFalse(jwtTokenServiceImpl.verifyEncryptedToken(token,
                 "person2@example.org",
                 1));
         // The uid is wrong. The token is not verified.
-        assertFalse(encryptedJwtTokenService.verifyEncryptedToken(token,
+        assertFalse(jwtTokenServiceImpl.verifyEncryptedToken(token,
                 "person@example.org",
                 10));
 
@@ -64,7 +64,7 @@ class EncryptedJwtTokenServiceTest {
         Thread.sleep(3000);
 
         // The token is expired. The token is not verified.
-        assertFalse(encryptedJwtTokenService.verifyEncryptedToken(token,
+        assertFalse(jwtTokenServiceImpl.verifyEncryptedToken(token,
                 "person@example.org",
                 1));
 
@@ -74,34 +74,34 @@ class EncryptedJwtTokenServiceTest {
     // Verifying with a wrong secret key
     @Test
     void verifyEncryptedTokenWrongSecretKey() throws Exception {
-        String token = encryptedJwtTokenService.generateEncryptedToken(
-                "person@example.org", 1, 3000
+        String token = jwtTokenServiceImpl.generateEncryptedToken(
+                "person@example.org", 1, 3000L
         );
 
         // Verify the token with the correct secret key
-        assertTrue(encryptedJwtTokenService.verifyEncryptedToken(token, "person@example.org", 1));
+        assertTrue(jwtTokenServiceImpl.verifyEncryptedToken(token, "person@example.org", 1));
 
         Mockito.doReturn("wrongSecretKey").when(runtimeSecretKeyGenerator).getKey();
 
         // Verify the token with the wrong secret key
-        assertFalse(encryptedJwtTokenService.verifyEncryptedToken(token, "person@example.org", 1));
+        assertFalse(jwtTokenServiceImpl.verifyEncryptedToken(token, "person@example.org", 1));
     }
 
 
     // verify with wrong RSA key
     @Test
     void verifyEncryptedTokenWrongRsaKey() throws Exception {
-        String token = encryptedJwtTokenService.generateEncryptedToken(
-                "person@example.org", 1, 3000
+        String token = jwtTokenServiceImpl.generateEncryptedToken(
+                "person@example.org", 1, 3000L
         );
 
         // Verify the token with the correct RSA key
-        assertTrue(encryptedJwtTokenService.verifyEncryptedToken(token, "person@example.org", 1));
+        assertTrue(jwtTokenServiceImpl.verifyEncryptedToken(token, "person@example.org", 1));
 
         Mockito.doReturn(null).when(runtimeRsaKeyGenerator).getKey();
 
         // Verify the token with the wrong RSA key
-        assertFalse(encryptedJwtTokenService.verifyEncryptedToken(token, "person@example.org", 1));
+        assertFalse(jwtTokenServiceImpl.verifyEncryptedToken(token, "person@example.org", 1));
     }
 
 
