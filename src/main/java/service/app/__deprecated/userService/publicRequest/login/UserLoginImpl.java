@@ -1,4 +1,4 @@
-package service.app.userService.publicRequest.login;
+package service.app.__deprecated.userService.publicRequest.login;
 
 import common.annotation.DatabaseOperation;
 import common.object.security.EncryptedData;

@@ -1,4 +1,4 @@
-package service.app.userService.publicRequest.register;
+package service.app.__deprecated.userService.publicRequest.register;
 
 
 import common.annotation.RateLimited;

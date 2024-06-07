@@ -1,16 +1,18 @@
 package service.general.authService.refreshTokenService.dao;
 
 import common.annotation.DatabaseOperation;
+import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Component
-public interface RefreshTokenRepository {
+@Service
+public interface RefreshTokenDao {
 
-    record RefreshToken(int uid, String refreshToken, LocalDateTime expDate) { }
+    record RefreshToken(int uid, String refreshToken, LocalDateTime expDate, LocalDateTime halfDate) { }
 
     /**
      * Get the refresh tokens by the user id.
@@ -24,6 +26,14 @@ public interface RefreshTokenRepository {
     throws SQLException;
 
     /**
+     * Get the refresh token by the refresh token ID
+     * @param refreshToken The refresh token.
+     */
+    @DatabaseOperation
+    RefreshToken getRefreshToken(String refreshToken);
+
+
+    /**
      * Save the refresh token.
      * Depending on the implementation, this may have to delete the old refresh token.
      *
@@ -33,7 +43,7 @@ public interface RefreshTokenRepository {
      * @throws SQLException If the query fails.
      */
     @DatabaseOperation
-    int saveRefreshToken(int uid, String refreshToken)
+    int saveRefreshToken(int uid, String refreshToken, LocalDateTime expDate, LocalDateTime halfExpDate)
     throws SQLException;
 
     /**

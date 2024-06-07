@@ -1,4 +1,4 @@
-package service.app.userService.publicRequest.verifyEmail;
+package service.app.__deprecated.userService.publicRequest.verifyEmail;
 
 public interface EmailVerificationIncoming {
     void sendVerificationEmail(String email, String token);

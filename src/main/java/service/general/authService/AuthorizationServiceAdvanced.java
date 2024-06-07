@@ -4,15 +4,14 @@ import com.nimbusds.jose.JOSEException;
 import common.annotation.DatabaseOperation;
 import common.exception.InternalServerError;
 import common.exception.NotAuthorizedException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import service.general.authService.jwtTokenService.JwtTokenService;
 import service.general.authService.refreshTokenService.RefreshTokenService;
 
 import java.sql.SQLException;
 
-@Service
-public class AuthorizationServiceImpl implements AuthorizationService {
+public class AuthorizationServiceAdvanced implements AuthorizationService {
 
     private final RefreshTokenService refreshTokenService;
     private final JwtTokenService jwtTokenService;
@@ -23,7 +22,8 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Value("${refresh.token.lifetime}")
     private Long refreshTokenLifetime;
 
-    public AuthorizationServiceImpl(JwtTokenService jwtTokenService, RefreshTokenService refreshTokenService) {
+    @Autowired
+    public AuthorizationServiceAdvanced(JwtTokenService jwtTokenService, RefreshTokenService refreshTokenService) {
         this.jwtTokenService = jwtTokenService;
         this.refreshTokenService = refreshTokenService;
     }
@@ -39,7 +39,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Override
     @DatabaseOperation
     public TokenPayload authorizeRequest(String jwtToken, String refreshToken, int uid, String email)
-    throws NotAuthorizedException, InternalServerError {
+            throws NotAuthorizedException, InternalServerError {
         try {
             // Check if the JWT token is valid. If yes, return SUCCESS.
             if (jwtTokenService.verifyEncryptedToken(jwtToken, email, uid)) {

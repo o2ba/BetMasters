@@ -1,4 +1,4 @@
-package service.app.userService.publicRequest.verifyEmail;
+package service.app.__deprecated.userService.publicRequest.verifyEmail;
 
 import common.config.SqlQueries;
 import common.exception.gen.UserNotFoundException;
@@ -7,7 +7,7 @@ import common.exception.register.InvalidTokenException;
 import dto.request.PostgresRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import service.app.userService.publicRequest.register.RegistrationService;
+import service.app.__deprecated.userService.publicRequest.register.RegistrationService;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;

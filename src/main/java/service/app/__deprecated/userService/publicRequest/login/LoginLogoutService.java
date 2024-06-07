@@ -1,4 +1,4 @@
-package service.app.userService.publicRequest.login;
+package service.app.__deprecated.userService.publicRequest.login;
 
 import com.nimbusds.jose.JOSEException;
 import common.exception.login.WrongEmailPasswordException;

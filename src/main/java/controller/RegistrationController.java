@@ -19,9 +19,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
-import service.app.userService.publicRequest.register.RegistrationService;
-import service.app.userService.publicRequest.register.UserCreation;
-import service.app.userService.publicRequest.register.UserCreationImpl;
+import service.app.__deprecated.userService.publicRequest.register.RegistrationService;
+import service.app.__deprecated.userService.publicRequest.register.UserCreation;
+import service.app.__deprecated.userService.publicRequest.register.UserCreationImpl;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
