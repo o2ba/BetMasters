@@ -1,25 +1,27 @@
 package controller;
 
-import exception.gen.RateLimitException;
-import exception.gen.UserNotFoundException;
-import exception.register.DuplicateEmailException;
-import exception.register.ExpiredTokenException;
-import exception.register.InvalidTokenException;
-import exception.register.ValidationException;
+import common.exception.gen.RateLimitException;
+import common.exception.register.DuplicateEmailException;
+import common.exception.register.ValidationException;
+import common.object.security.SensitiveData;
+import service.general.springService.SpringLanguageUtil;
+import service.general.__deprecated.user.UserUtil;
+import service.general.__deprecated.user.implementations.InputValidationManager;
+import dto.request.PostgresRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import object.security.SensitiveData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
-import service.RegistrationService;
-import util.spring.SpringLanguageUtil;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+import service.app.__deprecated.userService.publicRequest.register.RegistrationService;
+import service.app.__deprecated.userService.publicRequest.register.UserCreation;
+import service.app.__deprecated.userService.publicRequest.register.UserCreationImpl;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -56,7 +58,14 @@ public class RegistrationController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
 
     ) {
-        RegistrationService registrationService = new RegistrationService();
+        RegistrationService registrationService = new RegistrationService(
+            new UserCreationImpl(
+                    new InputValidationManager(),
+                    new UserUtil(),
+                    LoggerFactory.getLogger(UserCreation.class),
+                    new PostgresRequest()
+            )
+        );
         try {
             registrationService.createUser(firstName, lastName, email, password, date);
         } catch (DuplicateEmailException e) {
@@ -67,7 +76,7 @@ public class RegistrationController {
             logger.error("SQL Exception: Unable to create account", e);
             return ResponseEntity.status(500).body(langUtil.getMessage("unable.create.account", language));
         } catch (ValidationException e) {
-            logger.warn("Validation Failure in Backend! Injection Attack?");
+            logger.warn("InputValidation Failure in Backend! Injection Attack?");
             return ResponseEntity.status(422).body(e.getMessage());
         } catch (Exception e) {
             logger.error("Unknown Exception: Unable to create account", e);
@@ -82,10 +91,10 @@ public class RegistrationController {
     }
 
 
-    /**
+    /*
      * Verifies the email of a user
      * @param emailToken the token sent to the user's email
-     */
+
     @PostMapping("/verifyEmail")
     public ResponseEntity<String> verifyEmail(
             @ApiParam(value = "token") @RequestParam String emailToken,
@@ -118,34 +127,7 @@ public class RegistrationController {
                 langUtil.getMessage("email.verification.success", language)
         );
     }
+    */
 
-    @PostMapping("/deleteUser")
-    public ResponseEntity<String> deleteAccount(
-            @ApiParam(value = "uid") @RequestParam int uid,
-            @ApiParam(value = "Language code", example = "en", defaultValue = "en") @RequestHeader String language
-    ) {
-        RegistrationService registrationService = new RegistrationService();
-        try {
-            registrationService.deleteUser(uid);
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.status(422).body(
-                    langUtil.getMessage(UserNotFoundException.MESSAGE_ID, language));
-        } catch (SQLException e) {
-            logger.error("SQL Exception: Unable to delete account", e);
-            return ResponseEntity.status(422).body(
-                    langUtil.getMessage("unable.delete.account", language));
-        } catch (Exception e) {
-            logger.error("Unknown Exception: Unable to delete account", e);
-            return ResponseEntity.status(422).body(
-                    langUtil.getMessage("unable.delete.account", language)
-            );
-        }
-
-        return ResponseEntity.status(201).body(
-                langUtil.getMessage("user.deleted", language)
-        );
-    }
-
-    // TODO Reset password
 
 }
