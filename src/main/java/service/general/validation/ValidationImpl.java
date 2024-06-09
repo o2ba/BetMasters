@@ -1,8 +1,11 @@
 package service.general.validation;
 
-import org.springframework.stereotype.Service;
+import common.object.security.SensitiveData;
+import org.springframework.stereotype.Component;
 
-@Service
+import java.time.LocalDate;
+
+@Component
 public class ValidationImpl implements Validation {
 
     /**
@@ -20,7 +23,7 @@ public class ValidationImpl implements Validation {
      */
     @Override
     public boolean isNameValid(String name) {
-        return false;
+        return (name.length() >= 2 && name.length() <= 50 && name.matches("^[a-zA-Z-'\\s]+$"));
     }
 
     /**
@@ -29,6 +32,7 @@ public class ValidationImpl implements Validation {
      * <ul>
      *     <li>Must not be null</li>
      *     <li>Must not be empty</li>
+     *     <li>Must be shorter than 254 characters</li>
      *     <li>Must be a valid email (@ exists, and . after the @)</li>
      * </ul>
      *
@@ -37,7 +41,9 @@ public class ValidationImpl implements Validation {
      */
     @Override
     public boolean isEmailValid(String email) {
-        return false;
+        if (!email.matches("^.+@.+\\..+$")) {
+            return false;
+        } else return email.length() <= 254;
     }
 
     /**
@@ -54,12 +60,12 @@ public class ValidationImpl implements Validation {
      * @return True if the password is valid, false otherwise
      */
     @Override
-    public boolean isPasswordValid(String password) {
-        return false;
+    public boolean isPasswordValid(SensitiveData password) {
+        return password.isValidData();
     }
 
     /**
-     * <p>Checks if the date is valid.</p>
+     * <p>Checks if the date of birth is valid.</p>
      * <p><b>Validation Criteria:</b></p>
      * <ul>
      *     <li>Must not be null</li>
@@ -73,7 +79,7 @@ public class ValidationImpl implements Validation {
      * @return True if the date is valid, false otherwise
      */
     @Override
-    public boolean isDateValid(String date) {
-        return false;
+    public boolean isDobValid(LocalDate date) {
+        return date.isBefore(LocalDate.now());
     }
 }

@@ -1,4 +1,4 @@
-package service.general.authService.jwtTokenService.rsa;
+package service.app.authRequestService.authService.jwtTokenService.rsa;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.RSAKey;

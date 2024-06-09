@@ -24,10 +24,10 @@ public class LoginServiceDaoImpl implements LoginServiceDao {
     @DatabaseOperation
     public LoginServiceReturn getStoredPasswordForEmail(String email) throws InternalServerError {
 
-        try (ResultSet rs = postgresRequest.executeQuery(LoginServiceQueries.GET_USER_BY_EMAIL_RETURN_ID.getQuery())) {
+        try (ResultSet rs = postgresRequest.executeQuery(LoginServiceQueries.GET_USER_BY_EMAIL_RETURN_ID.getQuery(), email)) {
             if (rs.next()) {
                 return new LoginServiceReturn( new EncryptedData(rs.getString("password")),
-                        rs.getInt("id"));
+                        rs.getInt("uid"));
             } else {
                 throw new UserNotFoundException("User not found with email: " + email + ".");
             }

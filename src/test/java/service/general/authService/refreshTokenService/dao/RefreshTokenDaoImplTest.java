@@ -2,8 +2,10 @@ package service.general.authService.refreshTokenService.dao;
 
 import dto.request.PostgresRequest;
 import org.junit.jupiter.api.Test;
-import service.general.authService.refreshTokenService.token.RefreshTokenGenerator;
-import service.general.authService.refreshTokenService.token.RefreshTokenGeneratorImpl;
+import service.app.authRequestService.authService.refreshTokenService.dao.RefreshTokenDao;
+import service.app.authRequestService.authService.refreshTokenService.dao.RefreshTokenDaoImpl;
+import service.app.authRequestService.authService.refreshTokenService.token.RefreshTokenGenerator;
+import service.app.authRequestService.authService.refreshTokenService.token.RefreshTokenGeneratorImpl;
 
 import java.time.LocalDateTime;
 

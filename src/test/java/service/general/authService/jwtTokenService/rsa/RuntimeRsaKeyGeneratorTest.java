@@ -1,6 +1,7 @@
 package service.general.authService.jwtTokenService.rsa;
 
 import org.junit.jupiter.api.Test;
+import service.app.authRequestService.authService.jwtTokenService.rsa.RuntimeRsaKeyGenerator;
 
 import static org.junit.jupiter.api.Assertions.*;
 

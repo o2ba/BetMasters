@@ -1,4 +1,4 @@
-package service.general.authService.jwtTokenService.jwt;
+package service.app.authRequestService.authService.jwtTokenService.jwt;
 
 import org.springframework.stereotype.Component;
 

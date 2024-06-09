@@ -1,4 +1,4 @@
-package service.general.authService.jwtTokenService;
+package service.app.authRequestService.authService.jwtTokenService;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -6,10 +6,10 @@ import com.nimbusds.jose.JOSEException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import service.general.authService.jwtTokenService.jwt.JwtToken;
-import service.general.authService.jwtTokenService.rsa.RsaEncryptDecryptMessage;
-import service.general.authService.jwtTokenService.rsa.RuntimeRsaKeyGenerator;
-import service.general.authService.jwtTokenService.jwt.RuntimeSecretKeyGenerator;
+import service.app.authRequestService.authService.jwtTokenService.jwt.JwtToken;
+import service.app.authRequestService.authService.jwtTokenService.jwt.RuntimeSecretKeyGenerator;
+import service.app.authRequestService.authService.jwtTokenService.rsa.RsaEncryptDecryptMessage;
+import service.app.authRequestService.authService.jwtTokenService.rsa.RuntimeRsaKeyGenerator;
 
 import java.text.ParseException;
 

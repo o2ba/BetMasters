@@ -1,11 +1,11 @@
-package service.general.authService.refreshTokenService;
+package service.app.authRequestService.authService.refreshTokenService;
 
 import common.object.security.EncryptedData;
 import common.object.security.NonSensitiveData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import service.general.authService.refreshTokenService.dao.RefreshTokenDao;
-import service.general.authService.refreshTokenService.token.RefreshTokenGenerator;
+import service.app.authRequestService.authService.refreshTokenService.dao.RefreshTokenDao;
+import service.app.authRequestService.authService.refreshTokenService.token.RefreshTokenGenerator;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;

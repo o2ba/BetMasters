@@ -1,4 +1,4 @@
-package service.general.authService.refreshTokenService.dao;
+package service.app.authRequestService.authService.refreshTokenService.dao;
 
 import dto.request.PostgresRequest;
 import org.springframework.stereotype.Component;

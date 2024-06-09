@@ -8,8 +8,20 @@ package common.exception.register;
  * <b>Prevents SQL injection attacks</b>
  */
 public class ValidationException extends Exception {
+
+    public enum ValidationFailure {
+        NAME,
+        EMAIL,
+        PASSWORD,
+        DOB
+    }
+
     public ValidationException(String message) {
         super(message);
+    }
+
+    public ValidationException(ValidationFailure failure) {
+        super("Validation failed: " + failure);
     }
 
     public ValidationException(String message, Throwable cause) {

@@ -1,5 +1,10 @@
 package service.general.validation;
 
+import common.object.security.SensitiveData;
+
+import java.time.LocalDate;
+
+
 /**
  * <p>The validation serves as a way to validate the user input,
  * so it can be inserted into the database.</p>
@@ -12,6 +17,7 @@ package service.general.validation;
  *     <li>last_name varchar(50)</li>
  * </ul>
  */
+@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public interface Validation {
 
     /**
@@ -54,10 +60,10 @@ public interface Validation {
      * @param password The password to be validated
      * @return True if the password is valid, false otherwise
      */
-    boolean isPasswordValid(String password);
+    boolean isPasswordValid(SensitiveData password);
 
     /**
-     * <p>Checks if the date is valid.</p>
+     * <p>Checks if the date of birth is valid.</p>
      * <p><b>Validation Criteria:</b></p>
      * <ul>
      *     <li>Must not be null</li>
@@ -69,5 +75,5 @@ public interface Validation {
      * @param date The date to be validated
      * @return True if the date is valid, false otherwise
      */
-    boolean isDateValid(String date);
+    boolean isDobValid(LocalDate date);
 }

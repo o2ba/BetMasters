@@ -6,10 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import run.Main;
-import service.general.authService.jwtTokenService.jwt.JwtToken;
-import service.general.authService.jwtTokenService.rsa.RsaEncryptDecryptMessage;
-import service.general.authService.jwtTokenService.rsa.RuntimeRsaKeyGenerator;
-import service.general.authService.jwtTokenService.jwt.RuntimeSecretKeyGenerator;
+import service.app.authRequestService.authService.jwtTokenService.JwtTokenServiceImpl;
+import service.app.authRequestService.authService.jwtTokenService.jwt.JwtToken;
+import service.app.authRequestService.authService.jwtTokenService.rsa.RsaEncryptDecryptMessage;
+import service.app.authRequestService.authService.jwtTokenService.rsa.RuntimeRsaKeyGenerator;
+import service.app.authRequestService.authService.jwtTokenService.jwt.RuntimeSecretKeyGenerator;
 
 import static org.junit.jupiter.api.Assertions.*;
 

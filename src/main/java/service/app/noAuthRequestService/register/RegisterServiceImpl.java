@@ -7,6 +7,7 @@ import common.object.security.SensitiveData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.app.noAuthRequestService.register.dao.RegisterServiceDao;
+import service.general.validation.Validation;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,10 +16,12 @@ import java.time.LocalDateTime;
 public class RegisterServiceImpl implements RegisterService {
 
     RegisterServiceDao registerServiceDao;
+    Validation validation;
 
     @Autowired
-    public RegisterServiceImpl(RegisterServiceDao registerServiceDao) {
+    public RegisterServiceImpl(RegisterServiceDao registerServiceDao, Validation validation) {
         this.registerServiceDao = registerServiceDao;
+        this.validation = validation;
     }
 
     /**
@@ -38,12 +41,16 @@ public class RegisterServiceImpl implements RegisterService {
     public void addUser(String first_name, String last_name, String email, SensitiveData password, LocalDate dob)
     throws DuplicateEmailException, InternalServerError, ValidationException {
 
-        // TODO Validation!!
-        if (first_name == null || last_name == null || email == null || password == null || dob == null) {
-            throw new ValidationException("Data is not valid");
+        if(!validation.isNameValid(first_name) || !validation.isNameValid(last_name)) {
+            throw new ValidationException(ValidationException.ValidationFailure.NAME);
+        } else if(!validation.isEmailValid(email)) {
+            throw new ValidationException(ValidationException.ValidationFailure.EMAIL);
+        } else if(!validation.isPasswordValid(password)) {
+            throw new ValidationException(ValidationException.ValidationFailure.PASSWORD);
+        } else if(!validation.isDobValid(dob)) {
+            throw new ValidationException(ValidationException.ValidationFailure.DOB);
         }
 
-        // Add user to the database
         int result = registerServiceDao.addUser(first_name, last_name, email, password, dob, LocalDateTime.now());
 
         if (result == 0) {

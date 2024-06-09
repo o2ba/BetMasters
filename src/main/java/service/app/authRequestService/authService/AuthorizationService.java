@@ -1,4 +1,4 @@
-package service.general.authService;
+package service.app.authRequestService.authService;
 
 
 import common.exception.InternalServerError;

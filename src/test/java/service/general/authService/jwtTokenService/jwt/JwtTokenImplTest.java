@@ -3,6 +3,7 @@ package service.general.authService.jwtTokenService.jwt;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import service.app.authRequestService.authService.jwtTokenService.jwt.JwtTokenImpl;
 
 import java.util.UUID;
 

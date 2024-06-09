@@ -1,4 +1,4 @@
-package service.general.authService;
+package service.app.authRequestService.authService;
 
 import com.nimbusds.jose.JOSEException;
 import common.annotation.DatabaseOperation;
@@ -6,8 +6,8 @@ import common.exception.InternalServerError;
 import common.exception.NotAuthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import service.general.authService.jwtTokenService.JwtTokenService;
-import service.general.authService.refreshTokenService.RefreshTokenService;
+import service.app.authRequestService.authService.jwtTokenService.JwtTokenService;
+import service.app.authRequestService.authService.refreshTokenService.RefreshTokenService;
 
 import java.sql.SQLException;
 

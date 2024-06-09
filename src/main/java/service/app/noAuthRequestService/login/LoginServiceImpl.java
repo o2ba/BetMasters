@@ -11,7 +11,7 @@ import common.record.TokenPayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.app.noAuthRequestService.login.dao.LoginServiceDao;
-import service.general.authService.jwtTokenService.JwtTokenService;
+import service.app.authRequestService.authService.jwtTokenService.JwtTokenService;
 
 /**
  * Basic login service using JWT only

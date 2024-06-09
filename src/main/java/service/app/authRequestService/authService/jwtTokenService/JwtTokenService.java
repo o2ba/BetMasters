@@ -1,4 +1,4 @@
-package service.general.authService.jwtTokenService;
+package service.app.authRequestService.authService.jwtTokenService;
 
 import com.nimbusds.jose.JOSEException;
 import org.jetbrains.annotations.NotNull;

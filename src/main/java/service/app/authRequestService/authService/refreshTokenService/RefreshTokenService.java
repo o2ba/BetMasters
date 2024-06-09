@@ -1,4 +1,4 @@
-package service.general.authService.refreshTokenService;
+package service.app.authRequestService.authService.refreshTokenService;
 
 import common.annotation.DatabaseOperation;
 import org.springframework.stereotype.Service;

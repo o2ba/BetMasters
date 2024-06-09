@@ -1,10 +1,10 @@
-package service.general.authService;
+package service.app.authRequestService.authService;
 
 import common.exception.InternalServerError;
 import common.exception.NotAuthorizedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import service.general.authService.jwtTokenService.JwtTokenService;
+import service.app.authRequestService.authService.jwtTokenService.JwtTokenService;
 
 
 /**

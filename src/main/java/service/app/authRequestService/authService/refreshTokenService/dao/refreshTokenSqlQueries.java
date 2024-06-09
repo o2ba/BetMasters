@@ -1,4 +1,4 @@
-package service.general.authService.refreshTokenService.dao;
+package service.app.authRequestService.authService.refreshTokenService.dao;
 
 public enum refreshTokenSqlQueries {
     GET_REFRESH_TOKENS_BY_UID("SELECT * FROM refresh_tokens WHERE uid = ?"),

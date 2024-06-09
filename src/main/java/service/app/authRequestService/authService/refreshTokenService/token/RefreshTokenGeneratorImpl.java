@@ -1,10 +1,8 @@
-package service.general.authService.refreshTokenService.token;
+package service.app.authRequestService.authService.refreshTokenService.token;
 
 import common.object.security.NonSensitiveData;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
-import java.time.LocalDateTime;
 import java.util.Base64;
 import java.security.SecureRandom;
 
