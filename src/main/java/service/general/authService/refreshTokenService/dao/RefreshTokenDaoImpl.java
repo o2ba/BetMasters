@@ -1,8 +1,7 @@
 package service.general.authService.refreshTokenService.dao;
 
 import dto.request.PostgresRequest;
-import service.general.authService.refreshTokenService.token.RefreshTokenGenerator;
-import service.general.authService.refreshTokenService.token.RefreshTokenGeneratorImpl;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class RefreshTokenDaoImpl implements RefreshTokenDao {
 
 

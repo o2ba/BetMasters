@@ -1,16 +1,10 @@
 package service.general.authService;
 
-import com.nimbusds.jose.JOSEException;
-import common.annotation.DatabaseOperation;
 import common.exception.InternalServerError;
 import common.exception.NotAuthorizedException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import service.general.authService.jwtTokenService.JwtTokenService;
-import service.general.authService.refreshTokenService.RefreshTokenService;
-
-import java.sql.SQLException;
 
 
 /**
@@ -66,10 +60,9 @@ public final class AuthorizationServiceBasic implements AuthorizationService {
     @Override
     public TokenPayload generateFreshTokens(int uid, String email) throws InternalServerError {
         try {
-            jwtTokenService.generateEncryptedToken(email, uid, jwtTokenLifetime);
-        } catch (JOSEException e) {
+            return new TokenPayload(SuccessState.SUCCESS, jwtTokenService.generateEncryptedToken(email, uid, jwtTokenLifetime), null);
+        } catch (Exception e) {
             throw new InternalServerError("Failed to generate new tokens.");
         }
-
     }
 }

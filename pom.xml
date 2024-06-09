@@ -107,11 +107,6 @@
             <version>2.5.6</version>
         </dependency>
         <!-- Spring Boot Starter Security for security features -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-            <version>2.5.6</version>
-        </dependency>
         <!-- Spring Boot Starter Validation for validating user input -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

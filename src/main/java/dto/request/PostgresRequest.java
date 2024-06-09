@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +16,7 @@ import java.sql.SQLException;
  * It provides methods to execute SQL queries and updates, and manages the database connection pool efficiently.
  * This class is code-injection safe as it uses prepared statements to prevent SQL injection attacks.
  */
+@Service
 public final class PostgresRequest {
 
     /** Logger for the PostgresRequest class */
