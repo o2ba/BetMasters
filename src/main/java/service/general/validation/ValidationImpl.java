@@ -1,6 +1,6 @@
 package service.general.validation;
 
-import common.object.security.SensitiveData;
+import common.model.security.SensitiveData;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;

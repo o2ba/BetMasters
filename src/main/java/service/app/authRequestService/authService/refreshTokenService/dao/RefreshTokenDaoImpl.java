@@ -42,7 +42,7 @@ public class RefreshTokenDaoImpl implements RefreshTokenDao {
                 LocalDateTime expDate = qu.getTimestamp("expiry_date").toLocalDateTime();
                 // get the half expiry date
                 LocalDateTime halfExpDate = qu.getTimestamp("halftime_date").toLocalDateTime();
-                // create a new refresh token object
+                // create a new refresh token __object
                 RefreshToken token = new RefreshToken(uid, refreshToken, expDate, halfExpDate);
                 // add the refresh token to the list
                 refreshTokens.add(token);

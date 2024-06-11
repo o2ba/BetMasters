@@ -2,7 +2,7 @@ package service.app.noAuthRequestService.register.dao;
 
 import common.exception.InternalServerError;
 import common.exception.register.DuplicateEmailException;
-import common.object.security.SensitiveData;
+import common.model.security.SensitiveData;
 import dto.request.PostgresRequest;
 import org.springframework.stereotype.Component;
 

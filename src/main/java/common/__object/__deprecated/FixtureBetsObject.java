@@ -1,4 +1,4 @@
-package common.object.fixture;
+package common.__object.__deprecated;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -116,8 +116,8 @@ public class FixtureBetsObject {
     }
 
     /**
-     * Converts the odds to JSON. The fixture ID is not passed on as it is already available in the fixture object.
-     * @return the odds as a JSON object
+     * Converts the odds to JSON. The fixture ID is not passed on as it is already available in the fixture __object.
+     * @return the odds as a JSON __object
       */
     public JsonElement toJson() {
         // Create a JsonArray to hold the odds

@@ -1,4 +1,4 @@
-package common.object.fixture;
+package common.__object.__deprecated;
 
 
 import com.google.gson.*;
@@ -216,7 +216,7 @@ public class FixtureObject {
 
     /**
      * Returns a JSON representation of the fixture.
-     * This method creates a JSON object that includes all relevant fixture details,
+     * This method creates a JSON __object that includes all relevant fixture details,
      * making it easy to serialize fixture data for API responses or data storage.
      *
      * @return the JSON representation of the fixture
@@ -234,8 +234,8 @@ public class FixtureObject {
     }
 
     /**
-     * Adds basic fixture details to the JSON object.
-     * @param json the JSON object to which the basic details are added
+     * Adds basic fixture details to the JSON __object.
+     * @param json the JSON __object to which the basic details are added
      */
     private void addBasicDetails(JsonObject json) {
         json.addProperty("league", league_name);
@@ -245,8 +245,8 @@ public class FixtureObject {
     }
 
     /**
-     * Adds team-related details to the JSON object.
-     * @param json the JSON object to which the team details are added
+     * Adds team-related details to the JSON __object.
+     * @param json the JSON __object to which the team details are added
      */
     private void addTeamDetails(JsonObject json) {
         json.addProperty("home_team", teams.get("home"));
@@ -256,8 +256,8 @@ public class FixtureObject {
     }
 
     /**
-     * Adds goal details to the JSON object.
-     * @param json the JSON object to which the goal details are added
+     * Adds goal details to the JSON __object.
+     * @param json the JSON __object to which the goal details are added
      */
     private void addGoalDetails(JsonObject json) {
         json.addProperty("home_goals", goals.get("home"));
@@ -267,8 +267,8 @@ public class FixtureObject {
     }
 
     /**
-     * Adds status details to the JSON object.
-     * @param json the JSON object to which the status details are added
+     * Adds status details to the JSON __object.
+     * @param json the JSON __object to which the status details are added
      */
     private void addStatusDetails(JsonObject json) {
         json.addProperty("status_long", status.get("long"));
@@ -277,8 +277,8 @@ public class FixtureObject {
     }
 
     /**
-     * Adds odds details to the JSON object.
-     * @param json the JSON object to which the odds details are added
+     * Adds odds details to the JSON __object.
+     * @param json the JSON __object to which the odds details are added
      */
     private void addOddsDetails(JsonObject json) {
         if (odds != null) {

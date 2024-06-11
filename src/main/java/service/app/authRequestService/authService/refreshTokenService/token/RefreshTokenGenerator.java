@@ -1,6 +1,6 @@
 package service.app.authRequestService.authService.refreshTokenService.token;
 
-import common.object.security.NonSensitiveData;
+import common.model.security.NonSensitiveData;
 import org.springframework.stereotype.Component;
 
 @Component

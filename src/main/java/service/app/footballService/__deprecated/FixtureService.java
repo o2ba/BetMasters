@@ -1,13 +1,13 @@
-package service.app.fixtureService;
+package service.app.footballService.__deprecated;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.microsoft.applicationinsights.TelemetryClient;
 import com.microsoft.applicationinsights.telemetry.RemoteDependencyTelemetry;
-import dto.request.ApiRequest;
+import dto.request.__deprecated.ApiRequest;
 import dto.request.MetricsRequest;
-import common.object.fixture.FixtureBetsObject;
-import common.object.fixture.FixtureObject;
+import common.__object.__deprecated.FixtureBetsObject;
+import common.__object.__deprecated.FixtureObject;
 import dto.response.FixtureOddsResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -162,7 +162,7 @@ public class FixtureService {
      *
      * @param gamesWithBetsOnly whether to get fixtures with bets only or not.
      *                          If true, fixtures without bets are filtered out. The bets are contained
-     *                          in the FixtureObject class as a FixtureBetsController object.
+     *                          in the FixtureObject class as a FixtureBetsController __object.
      * @return a List of Fixtures objects is returned, with the FixtureBetsController defined for the respective Fixtures if
      * they exist. Please refer to the FixtureObject class for more information.
      */

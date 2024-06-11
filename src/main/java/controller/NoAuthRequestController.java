@@ -6,7 +6,7 @@ import common.exception.gen.UserNotFoundException;
 import common.exception.login.WrongEmailPasswordException;
 import common.exception.register.DuplicateEmailException;
 import common.exception.register.ValidationException;
-import common.object.security.SensitiveData;
+import common.model.security.SensitiveData;
 import common.record.TokenPayload;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

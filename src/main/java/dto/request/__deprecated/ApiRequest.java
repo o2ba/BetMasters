@@ -1,4 +1,4 @@
-package dto.request;
+package dto.request.__deprecated;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -20,33 +20,33 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The ApiRequest class is used to send requests to the API. It builds the URL for the request and sends the request
+ * The FootballApiRequest class is used to send requests to the API. It builds the URL for the request and sends the request
  * using the OkHttpClient library. The response is returned as a JsonElement.
  */
 public final class ApiRequest {
 
-    /** Logger for the ApiRequest class */
+    /** Logger for the FootballApiRequest class */
     private static final Logger logger = LoggerFactory.getLogger(ApiRequest.class);
 
-    /** The OkHttpClient object used to send requests. We use a static one here to avoid creating multiple instances of
-     * the OkHttpClient object, as OkHttp supports connection pooling
+    /** The OkHttpClient __object used to send requests. We use a static one here to avoid creating multiple instances of
+     * the OkHttpClient __object, as OkHttp supports connection pooling
      */
     private static final OkHttpClient client = new OkHttpClient();
 
     /**
-     * The base URL for the API. This URL will be identical for all instances of the ApiRequest class
+     * The base URL for the API. This URL will be identical for all instances of the FootballApiRequest class
      */
     private static final String API_URL = "https://v3.football.api-sports.io/";
 
     /**
      * The API key used to authenticate requests. If no token is retrieved, a RuntimeException is called
-     * This token will be identical for all instances of the ApiRequest class
+     * This token will be identical for all instances of the FootballApiRequest class
      */
     @NotNull
     private static final String KEY;
 
     /**
-     * The host URL for the API. This URL will be identical for all instances of the ApiRequest class
+     * The host URL for the API. This URL will be identical for all instances of the FootballApiRequest class
      */
     private static final String HOST = "v3.football.java.backend.model.api-sports.io";
 
@@ -269,7 +269,7 @@ public final class ApiRequest {
      * @param endpoint the endpoint to which the request is sent to.
      * @param method the HTTP method to use.
      * @param params the parameters for the request as a Map<String, String>.
-     * @return the built Request object
+     * @return the built Request __object
      */
     private Request buildRequest(String endpoint, String method, Map<String, String> params) {
         return new Request.Builder()
@@ -282,7 +282,7 @@ public final class ApiRequest {
 
     /**
      * Executes the request and returns the response as a JsonElement.
-     * @param request the Request object to be sent
+     * @param request the Request __object to be sent
      * @param params the parameters for the request as a Map<String, String>.
      * @return the response as a JsonElement
      * @throws RuntimeException if the request fails due to an IOException
@@ -304,7 +304,7 @@ public final class ApiRequest {
 
     /**
      * Validates the response from the API.
-     * @param response the Response object from the API
+     * @param response the Response __object from the API
      * @param params the parameters for the request as a Map<String, String>.
      * @throws IOException if the response is not successful or the response code is not 200
      */
@@ -325,7 +325,7 @@ public final class ApiRequest {
 
     /**
      * Parses the response body from the API and returns it as a JsonElement.
-     * @param responseBody the ResponseBody object from the API
+     * @param responseBody the ResponseBody __object from the API
      * @return the response body as a JsonElement
      * @throws IOException if the response body is null, empty, or cannot be parsed into a JsonElement
      */

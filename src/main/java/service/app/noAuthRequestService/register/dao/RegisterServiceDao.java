@@ -3,7 +3,7 @@ package service.app.noAuthRequestService.register.dao;
 import common.annotation.DatabaseOperation;
 import common.exception.InternalServerError;
 import common.exception.register.DuplicateEmailException;
-import common.object.security.SensitiveData;
+import common.model.security.SensitiveData;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;

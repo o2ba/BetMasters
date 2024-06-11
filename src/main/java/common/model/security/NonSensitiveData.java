@@ -1,4 +1,4 @@
-package common.object.security;
+package common.model.security;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

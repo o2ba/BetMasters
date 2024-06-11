@@ -3,7 +3,7 @@ package service.app.noAuthRequestService.login.dao;
 import common.annotation.DatabaseOperation;
 import common.exception.InternalServerError;
 import common.exception.gen.UserNotFoundException;
-import common.object.security.EncryptedData;
+import common.model.security.EncryptedData;
 import dto.request.PostgresRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

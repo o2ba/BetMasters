@@ -1,4 +1,4 @@
-package common.object.security;
+package common.model.security;
 
 import common.exception.register.ValidationException;
 

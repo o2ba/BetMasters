@@ -1,7 +1,7 @@
-package common.object.security;
+package common.model.security;
 
 /**
- * Class for EncryptedObject. An EncryptedObject object is a representation of an object that has been encrypted.
+ * Class for EncryptedObject. An EncryptedObject __object is a representation of an __object that has been encrypted.
  * For example, a password or a revolving refresh token.
  * The reason we have this class it to clearly distinguish between encrypted and non-encrypted objects.
  *

@@ -1,8 +1,8 @@
-package service.app.authRequestService.userPool;
+package service.app.authRequestService.betPool;
 
-import service.app.authRequestService.userPool.model.UserPool;
+import service.app.authRequestService.betPool.model.BetPool;
 
-public interface UserPoolService {
+public interface BetPoolService {
 
     /**
      * Create a new user pool with the given name, locked status, client secret, and owner UID.
@@ -11,7 +11,7 @@ public interface UserPoolService {
      * @param locked whether the user pool is locked
      * @param clientSecret the client secret for the user pool
      */
-    UserPool createUserPool(String poolName, boolean locked, String clientSecret, int ownerUid);
+    BetPool createUserPool(String poolName, boolean locked, String clientSecret, int ownerUid);
 
 
     void deleteUserPool(String poolId);

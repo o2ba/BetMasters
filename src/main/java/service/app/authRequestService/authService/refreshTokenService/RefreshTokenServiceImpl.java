@@ -1,7 +1,7 @@
 package service.app.authRequestService.authService.refreshTokenService;
 
-import common.object.security.EncryptedData;
-import common.object.security.NonSensitiveData;
+import common.model.security.EncryptedData;
+import common.model.security.NonSensitiveData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.app.authRequestService.authService.refreshTokenService.dao.RefreshTokenDao;

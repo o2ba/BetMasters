@@ -3,7 +3,7 @@ package service.app.noAuthRequestService.register;
 import common.exception.InternalServerError;
 import common.exception.register.DuplicateEmailException;
 import common.exception.register.ValidationException;
-import common.object.security.SensitiveData;
+import common.model.security.SensitiveData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.app.noAuthRequestService.register.dao.RegisterServiceDao;

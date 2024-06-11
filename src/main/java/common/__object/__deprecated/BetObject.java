@@ -1,9 +1,9 @@
-package common.object.fixture;
+package common.__object.__deprecated;
 
 import java.util.Map;
 
 /*
- * Class for Game Odds. A GameOdds object is a representation of the odds available for a game.
+ * Class for Game Odds. A GameOdds __object is a representation of the odds available for a game.
  */
 public class BetObject {
 

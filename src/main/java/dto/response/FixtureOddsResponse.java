@@ -12,7 +12,7 @@ import java.util.function.Function;
 /**
  * A class to represent the response from the API.
  *
- * @param <T> The type of object that the payload contains.
+ * @param <T> The type of __object that the payload contains.
  */
 public class FixtureOddsResponse<T> {
     // -------------- Fields --------------
@@ -58,17 +58,17 @@ public class FixtureOddsResponse<T> {
 
 
     /**
-     * The time taken to construct the object. This involves converting the JsonElement into objects of type T.
+     * The time taken to construct the __object. This involves converting the JsonElement into objects of type T.
      */
     private final @NotNull Long constructorTime;
 
     /* -------------- Constructors -------------- */
 
     /**
-     * Constructs an APIPayload object without a limit on the number of objects in the payload.
+     * Constructs an APIPayload __object without a limit on the number of objects in the payload.
      *
      * @param jsonData The raw data from the API.
-     * @param converter A function that converts a JsonElement into an object of type T.
+     * @param converter A function that converts a JsonElement into an __object of type T.
      */
     public FixtureOddsResponse(JsonElement jsonData, Function<JsonElement, T> converter, int responseCode,
                                @NotNull Map<String, List<String>> responseHeaders) {
@@ -171,9 +171,9 @@ public class FixtureOddsResponse<T> {
     public Map<String, List<String>> getResponseHeaders() { return responseHeaders; }
 
     /**
-     * Returns the time taken to construct the object.
+     * Returns the time taken to construct the __object.
      *
-     * @return The time taken to construct the object.
+     * @return The time taken to construct the __object.
      */
     public long getConstructorTime() { return constructorTime; }
 
