@@ -10,6 +10,9 @@ public class Fixture {
     @SerializedName("fixture")
     private FixtureDetails fixtureDetails;
 
+    @SerializedName("league")
+    private LeagueDetails leagueDetails;
+
     @Override
     public String toString() {
         return "Fixture{" +
