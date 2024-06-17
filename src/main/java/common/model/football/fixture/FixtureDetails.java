@@ -31,7 +31,7 @@ public record FixtureDetails(
             @SerializedName("second") Long secondPeriod
     ) { }
 
-    public LocalDateTime getDate() {
+    public LocalDateTime getDateAsTimestamp() {
         return convertTimestampToDate(timestamp);
     }
 
