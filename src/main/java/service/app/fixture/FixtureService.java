@@ -1,4 +1,4 @@
-package service.app.footballService.__deprecated;
+package service.app.fixture;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -6,8 +6,8 @@ import com.microsoft.applicationinsights.TelemetryClient;
 import com.microsoft.applicationinsights.telemetry.RemoteDependencyTelemetry;
 import dto.request.__deprecated.ApiRequest;
 import dto.request.MetricsRequest;
-import common.__object.__deprecated.FixtureBetsObject;
-import common.__object.__deprecated.FixtureObject;
+import common.model.football.fixture.FixtureBetsObject;
+import common.model.football.fixture.FixtureObject;
 import dto.response.FixtureOddsResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
