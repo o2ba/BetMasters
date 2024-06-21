@@ -1,0 +1,111 @@
+@startuml
+
+entity "Users" as users {
+  + user_id: SERIAL <<PK>>
+  --
+  username: VARCHAR(50) <<UNIQUE>>
+  email: VARCHAR(100) <<UNIQUE>>
+  password_hash: VARCHAR(255)
+  created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+}
+
+entity "Roles" as roles {
+  + role_id: SERIAL <<PK>>
+  --
+  role_name: VARCHAR(50) <<UNIQUE>>
+}
+
+entity "User Roles" as user_roles {
+  --
+  user_id: INT <<FK>>
+  role_id: INT <<FK>>
+  [PK] user_id, role_id
+}
+
+entity "Transactions" as transactions {
+  + transaction_id: SERIAL <<PK>>
+  --
+  user_id: INT <<FK>>
+  amount: DECIMAL(10, 2)
+  transaction_type: VARCHAR(50)
+  transaction_date: TIMESTAMP
+  status: VARCHAR(50) DEFAULT 'pending'
+}
+
+entity "Events" as events {
+  + event_id: SERIAL <<PK>>
+  --
+  event_name: VARCHAR(255)
+  event_date: TIMESTAMP
+  sport: VARCHAR(50)
+  created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+}
+
+entity "Odds" as odds {
+  + odds_id: SERIAL <<PK>>
+  --
+  event_id: INT <<FK>>
+  odds_type: VARCHAR(50)
+  odds_value: DECIMAL(10, 2)
+  created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+}
+
+entity "Bets" as bets {
+  + bet_id: SERIAL <<PK>>
+  --
+  user_id: INT <<FK>>
+  event_id: INT <<FK>>
+  odds_id: INT <<FK>>
+  amount: DECIMAL(10, 2)
+  potential_payout: DECIMAL(10, 2)
+  bet_date: TIMESTAMP
+  status: VARCHAR(50) DEFAULT 'pending'
+}
+
+entity "Pools" as pools {
+  + pool_id: SERIAL <<PK>>
+  --
+  pool_name: VARCHAR(100)
+  created_by: INT <<FK>>
+  created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+}
+
+entity "Pool Members" as pool_members {
+  --
+  pool_id: INT <<FK>>
+  user_id: INT <<FK>>
+  joined_at: TIMESTAMP
+  [PK] pool_id, user_id
+}
+
+entity "Pool Bets" as pool_bets {
+  + pool_bet_id: SERIAL <<PK>>
+  --
+  pool_id: INT <<FK>>
+  event_id: INT <<FK>>
+  odds_id: INT <<FK>>
+  amount: DECIMAL(10, 2)
+  potential_payout: DECIMAL(10, 2)
+  bet_date: TIMESTAMP
+  status: VARCHAR(50) DEFAULT 'pending'
+}
+
+users ||--o{ user_roles: user_id
+roles ||--o{ user_roles: role_id
+users ||--o{ transactions: user_id
+events ||--o{ odds: event_id
+users ||--o{ bets: user_id
+events ||--o{ bets: event_id
+odds ||--o{ bets: odds_id
+users ||--o{ pools: created_by
+pools ||--o{ pool_members: pool_id
+users ||--o{ pool_members: user_id
+pools ||--o{ pool_bets: pool_id
+events ||--o{ pool_bets: event_id
+odds ||--o{ pool_bets: odds_id
+
+@enduml

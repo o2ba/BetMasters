@@ -1,0 +1,41 @@
+@startuml
+
+interface ExternalAPI
+
+package "Service Layer" {
+    class FixtureRequest {
+        +getFixtureOdds(): FixtureOddsResponse
+    }
+}
+
+package "Builder Layer" {
+    class APIRequest {
+        +fetchDataFromAPI(): String
+    }
+}
+
+package "Model" {
+    class Fixture {
+        -id: int
+        -teamA: String
+        -teamB: String
+        -date: Date
+    }
+}
+
+package "Response" {
+    class FixtureOddsResponse {
+        -fixtures: List<Fixture>
+        +FixtureOddsResponse(fixtures: List<Fixture>)
+    }
+}
+
+' Relationships
+FixtureRequest --> APIRequest : sends request
+APIRequest --> ExternalAPI : sends request
+ExternalAPI --> APIRequest : returns response
+APIRequest --> FixtureRequest : returns response
+FixtureRequest --> FixtureOddsResponse : creates with response
+FixtureOddsResponse --> Fixture : contains
+
+@enduml
