@@ -91,7 +91,7 @@ public class FixtureOddsResponse<T> {
         }
 
         try {
-            this.payload = toObjectList(jsonData.getAsJsonObject().get("dto/response"), converter);
+            this.payload = toObjectList(jsonData.getAsJsonObject().get("response"), converter);
         } catch (Exception e) {
             this.payload = new ArrayList<>();
         }

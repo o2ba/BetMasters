@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.microsoft.applicationinsights.TelemetryClient;
 import com.microsoft.applicationinsights.telemetry.RemoteDependencyTelemetry;
-import dto.request.__deprecated.ApiRequest;
+import dto.request.ApiRequest;
 import dto.request.MetricsRequest;
 import common.model.football.fixture.FixtureBetsObject;
 import common.model.football.fixture.FixtureObject;
@@ -14,10 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 public class FixtureService {
@@ -102,6 +99,9 @@ public class FixtureService {
         FixtureOddsResponse<FixtureObject> response = sendRequest("fixtures", fixtureParams, FixtureObject::new);
 
         logger.debug("Request to [FixtureObject] came back with %d results with response code %s and took %d milliseconds.".formatted(response.getAmountOfResults(), response.getResponseCode(), timeFootballRequest));
+
+        System.out.println(response.getError().toString());
+        System.out.println(response.getPayload().toString());
 
         if (!response.getError().isEmpty()) {
             logger.error("Error in the request for fixtures. " + "Error: {}", response.getError().getAsJsonArray().toString());

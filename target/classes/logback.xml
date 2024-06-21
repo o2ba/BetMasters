@@ -3,15 +3,24 @@
         <instrumentationKey>dfb7bef5-6997-4004-824c-e42648775af3</instrumentationKey>
     </appender>
 
+    <!-- Console Appender -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
     <root level="info">
         <appender-ref ref="aiAppender" />
+        <appender-ref ref="STDOUT" />
     </root>
-
 
     <include resource="org/springframework/boot/logging/logback/base.xml" />
     <logger name="org.springframework" level="ERROR"/>
     <logger name="backend" level="DEBUG" />
     <logger name="root" level="WARN" />
+
 
     <logger name="io.swagger" level="OFF" />
     <logger name="springfox.documentation" level="OFF" />

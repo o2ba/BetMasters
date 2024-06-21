@@ -1,4 +1,4 @@
-package dto.request.__deprecated;
+package dto.request;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

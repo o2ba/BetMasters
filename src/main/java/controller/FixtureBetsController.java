@@ -30,7 +30,7 @@ public class FixtureBetsController {
             @ApiParam(value = "season") String season,
             @ApiParam(value = "fixture_id") String fixture_id,
             @ApiParam(value = "Timezone") @RequestParam(defaultValue = "Europe/Berlin")
-                    String timezone,
+            String timezone,
             @ApiParam(value = "Games in the future only") @RequestParam(defaultValue = "false")
             boolean future_games_only,
             @ApiParam(value = "Only include games with bets available") @RequestParam(defaultValue = "false")
