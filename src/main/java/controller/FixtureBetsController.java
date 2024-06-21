@@ -6,8 +6,8 @@ import com.google.gson.JsonArray;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import common.__object.__deprecated.FixtureObject;
-import service.app.footballService.__deprecated.FixtureService;
+import common.model.football.fixture.FixtureObject;
+import service.app.fixture.FixtureService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +30,7 @@ public class FixtureBetsController {
             @ApiParam(value = "season") String season,
             @ApiParam(value = "fixture_id") String fixture_id,
             @ApiParam(value = "Timezone") @RequestParam(defaultValue = "Europe/Berlin")
-                    String timezone,
+            String timezone,
             @ApiParam(value = "Games in the future only") @RequestParam(defaultValue = "false")
             boolean future_games_only,
             @ApiParam(value = "Only include games with bets available") @RequestParam(defaultValue = "false")
