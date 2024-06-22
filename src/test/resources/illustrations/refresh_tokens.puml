@@ -1,0 +1,29 @@
+@startuml
+|Frontend Application|
+:Login Request (Message Start Event);
+|Authentication Server|
+:Receive Login Request (Task);
+:Query Database (Send Task);
+|Database|
+:Fetch User Data (Task);
+:Receive User Data (Receive Task);
+:Compare Credentials (Task);
+:Decision Gateway;
+note right
+  Decision Point
+end note
+if (Credentials Valid) then (yes)
+  :Issue Tokens (Task);
+  |Frontend Application|
+  :Receive Tokens (Receive Task);
+else (no)
+  :Handle Invalid Login (Task);
+  |Frontend Application|
+  :Receive Error Message (Receive Task);
+endif
+|Database|
+:Fetch User Data (Task);
+:SQL Error (Intermediate Error Event);
+|Authentication Server|
+:End with error: SQLException;
+@enduml

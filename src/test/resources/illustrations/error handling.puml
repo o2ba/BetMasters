@@ -1,0 +1,63 @@
+@startuml
+title Sequence Diagram for FixtureBets to APIRequest with Error Handling
+
+actor Client
+boundary "Swagger Controller\nFixtureBets" as FixtureBets
+control "FixtureRequest" as FixtureRequest
+entity "APIRequest" as APIRequest
+entity "FixtureOddsResponse" as FixtureOddsResponse
+entity "Gson" as Gson
+
+Client -> FixtureBets : GET /fixturesWithOdds
+activate FixtureBets
+
+alt Successful FixtureRequest Creation
+    FixtureBets -> FixtureRequest : new FixtureRequest(parameters)
+    activate FixtureRequest
+else IllegalArgumentException
+    FixtureBets --> Client : ResponseEntity.badRequest().body(e.getMessage())
+    deactivate FixtureBets
+    end
+
+alt Successful APIRequest Execution
+    FixtureRequest -> APIRequest : executeRequest()
+    activate APIRequest
+else Exception
+    FixtureRequest --> FixtureBets : ResponseEntity.internalServerError().body(e.getMessage())
+    deactivate FixtureRequest
+    deactivate FixtureBets
+    end
+
+APIRequest --> FixtureRequest : response
+deactivate APIRequest
+
+alt Successful FixtureOddsResponse Creation
+    FixtureRequest -> FixtureOddsResponse : new FixtureOddsResponse(response, converter, responseCode)
+    activate FixtureOddsResponse
+else Exception
+    FixtureRequest --> FixtureBets : ResponseEntity.internalServerError().body(e.getMessage())
+    deactivate FixtureRequest
+    deactivate FixtureBets
+    end
+
+FixtureOddsResponse --> FixtureRequest : FixtureOddsResponse object
+deactivate FixtureOddsResponse
+
+FixtureRequest --> FixtureBets : fixturesWithOdds
+deactivate FixtureRequest
+
+alt Successful JSON Conversion
+    FixtureBets -> Gson : toJson(fixturesWithOdds)
+    activate Gson
+else Exception
+    FixtureBets --> Client : ResponseEntity.internalServerError().body("Error with JSON Conversion \n" + e.getMessage())
+    deactivate FixtureBets
+    end
+
+Gson --> FixtureBets : prettyJson
+deactivate Gson
+
+FixtureBets --> Client : ResponseEntity.ok(prettyJson)
+deactivate FixtureBets
+
+@enduml

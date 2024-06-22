@@ -1,0 +1,41 @@
+@startuml
+
+    cloud "Vercel" {
+            node "Frontend Server" {
+                [Frontend Application]
+            }
+    }
+
+    cloud "Azure" {
+        node "Backend Server" {
+            [Backend Application]
+            database "Database" {
+                [User Accounts]
+                [Transactions]
+            }
+        }
+
+
+
+        storage "Azure CDN" {
+            [Static Assets]
+        }
+
+        [Environment Variables (Azure Key Vault?)] -down-> [Backend Application] : "API Keys, Connection Strings"
+    }
+
+    cloud "External" {
+        node "APIS for Games/Odds Data" {
+                    [External Data Service]
+                }
+    }
+
+actor User
+
+User --> [Frontend Application] : Access website
+[Frontend Application] --> [Backend Application] : Send requests
+[Backend Application] --> "Database" : Query/Update data
+[Backend Application] --> [External Data Service] : Fetch games/odds data
+[Frontend Application] --> [Static Assets] : Load from CDN
+
+@enduml

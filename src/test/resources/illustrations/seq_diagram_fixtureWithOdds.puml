@@ -1,0 +1,50 @@
+@startuml
+title Sequence Diagram for FixtureBets to APIRequest
+skinparam backgroundColor transparent
+skinparam defaultFontName "IBM Plex Sans"
+skinparam sequence {
+    LifeLineBorderColor blue
+    LifeLineBackgroundColor azure
+    ParticipantBorderColor blue
+    ParticipantBackgroundColor azure
+    ArrowColor blue
+}
+
+actor Client
+boundary "Swagger Controller\nFixtureBets" as FixtureBets
+control "FixtureRequest" as FixtureRequest
+entity "Fixture" as Fixture
+entity "FixtureOddsResponse" as FixtureOddsResponse
+entity "APIRequest" as APIRequest
+
+Client -> FixtureBets : GET /fixturesWithOdds
+activate FixtureBets
+
+FixtureBets -> FixtureRequest : new FixtureRequest(parameters)
+activate FixtureRequest
+
+FixtureRequest -> APIRequest : executeRequest()
+activate APIRequest
+
+APIRequest --> FixtureRequest : HttpResponse response
+deactivate APIRequest
+
+FixtureRequest -> FixtureOddsResponse : new FixtureOddsResponse(response, converter, responseCode)
+activate FixtureOddsResponse
+
+FixtureOddsResponse --> FixtureRequest : FixtureOddsResponse object
+deactivate FixtureOddsResponse
+
+FixtureRequest -> Fixture : getFixturesWithOdds(games_with_bets_only)
+activate Fixture
+
+Fixture --> FixtureRequest : List<Fixture> fixtureObjects
+deactivate Fixture
+
+FixtureRequest --> FixtureBets : fixturesWithOdds
+deactivate FixtureRequest
+
+FixtureBets --> Client : ResponseEntity.ok(prettyJson)
+deactivate FixtureBets
+
+@enduml
