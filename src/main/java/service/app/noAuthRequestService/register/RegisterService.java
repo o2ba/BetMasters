@@ -3,7 +3,7 @@ package service.app.noAuthRequestService.register;
 import common.exception.InternalServerError;
 import common.exception.register.DuplicateEmailException;
 import common.exception.register.ValidationException;
-import common.model.security.SensitiveData;
+import common.security.SensitiveData;
 
 import java.time.LocalDate;
 

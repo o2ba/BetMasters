@@ -59,7 +59,7 @@ public class AuthorizationServiceAdvanced implements AuthorizationService {
                         return new TokenPayload(SuccessState.NEW_TOKENS_REQUIRED,
                                 jwtTokenService.generateEncryptedToken(email, uid, jwtTokenLifetime), newRefreshToken);
                     }
-                    // The token is no longer valid. Throw an exception.
+                    // The token is no longer valid. Throw an exceptions.
                     case DEAD -> throw new NotAuthorizedException("User not authorized.");
                     // This should never happen.
                     default -> throw new InternalServerError("Internal server error.");

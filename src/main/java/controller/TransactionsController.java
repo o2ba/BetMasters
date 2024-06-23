@@ -103,7 +103,6 @@ public class TransactionsController {
         } catch (NotAuthorizedException e) {
             return ResponseEntity.status(401).body("Not authorized");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             return ResponseEntity.status(500).body("Internal server error");
         }
 

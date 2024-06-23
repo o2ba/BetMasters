@@ -4,7 +4,7 @@ package common.exception.register;
 /**
  * Exception for when a validation error occurs.
  * These errors should be handled by the frontend to begin with,
- * but if they are not, this exception will be thrown.
+ * but if they are not, this exceptions will be thrown.
  * <b>Prevents SQL injection attacks</b>
  */
 public class ValidationException extends Exception {

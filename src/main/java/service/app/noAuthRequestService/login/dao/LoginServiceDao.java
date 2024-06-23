@@ -3,7 +3,7 @@ package service.app.noAuthRequestService.login.dao;
 import common.annotation.DatabaseOperation;
 import common.exception.InternalServerError;
 import common.exception.gen.UserNotFoundException;
-import common.model.security.EncryptedData;
+import common.security.EncryptedData;
 
 public interface LoginServiceDao {
 

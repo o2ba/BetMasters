@@ -2,7 +2,7 @@ package service.app.authRequestService.transactionService.dao;
 
 import common.exception.InternalServerError;
 import common.exception.transactions.InvalidRecipientException;
-import dto.request.PostgresRequest;
+import dto.PostgresRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

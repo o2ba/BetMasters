@@ -60,7 +60,6 @@ public class JwtTokenImpl implements JwtToken {
      */
     @Override
     public DecodedJWT decodeToken(String token, String secretKey) {
-        System.out.println("Decoding with key: " + secretKey);
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey)).build();
         return verifier.verify(token);
     }

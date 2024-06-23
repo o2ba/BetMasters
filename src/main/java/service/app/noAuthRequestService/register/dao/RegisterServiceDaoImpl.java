@@ -3,12 +3,10 @@ package service.app.noAuthRequestService.register.dao;
 import common.exception.InternalServerError;
 import common.exception.gen.TimeoutException;
 import common.exception.register.DuplicateEmailException;
-import common.model.security.SensitiveData;
-import dto.request.PostgresRequest;
-import okio.Timeout;
+import common.security.SensitiveData;
+import dto.PostgresRequest;
 import org.springframework.stereotype.Component;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

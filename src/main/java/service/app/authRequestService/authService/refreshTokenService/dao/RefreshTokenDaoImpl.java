@@ -1,6 +1,6 @@
 package service.app.authRequestService.authService.refreshTokenService.dao;
 
-import dto.request.PostgresRequest;
+import dto.PostgresRequest;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
@@ -68,7 +68,7 @@ public class RefreshTokenDaoImpl implements RefreshTokenDao {
 
     /**
      * Save the refresh token.
-     * Depending on the implementation, this may have to delete the old refresh token.
+     * Depending on the implementation, this may have to delete the v1 refresh token.
      *
      * @param uid          The user id.
      * @param refreshToken The refresh token.

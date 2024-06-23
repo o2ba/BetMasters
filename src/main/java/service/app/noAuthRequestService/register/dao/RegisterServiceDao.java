@@ -4,7 +4,7 @@ import common.annotation.DatabaseOperation;
 import common.exception.InternalServerError;
 import common.exception.gen.TimeoutException;
 import common.exception.register.DuplicateEmailException;
-import common.model.security.SensitiveData;
+import common.security.SensitiveData;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;

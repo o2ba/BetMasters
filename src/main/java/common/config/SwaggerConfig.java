@@ -18,7 +18,7 @@ import java.util.Locale;
 
 @Configuration
 @EnableSwagger2
-@ComponentScan(basePackages = {"controller", "service"})
+@ComponentScan(basePackages = {"controller", "service", "dto", "service"})
 public class SwaggerConfig {
     @Bean
     public Docket api() {

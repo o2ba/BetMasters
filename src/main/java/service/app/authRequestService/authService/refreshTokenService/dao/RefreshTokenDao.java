@@ -35,7 +35,7 @@ public interface RefreshTokenDao {
 
     /**
      * Save the refresh token.
-     * Depending on the implementation, this may have to delete the old refresh token.
+     * Depending on the implementation, this may have to delete the v1 refresh token.
      *
      * @param uid The user id.
      * @param refreshToken The refresh token.

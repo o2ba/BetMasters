@@ -6,8 +6,8 @@ import com.google.gson.JsonArray;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import common.model.football.fixture.FixtureObject;
-import service.app.fixture.FixtureService;
+import service.app.fixtureService.v1.model.FixtureObject;
+import service.app.fixtureService.v1.FixtureService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,7 @@ import java.util.Map;
 @Controller
 public class FixtureBetsController {
     @ApiOperation(value = "Get fixtures with odds", notes = "This endpoint allows you to get fixtures with odds.")
-    @GetMapping("/fixturesWithOdds")
+    @GetMapping("/v1/fixturesWithOdds")
     @ResponseBody
     public ResponseEntity<String> fixturesWithOdds(
             @ApiParam(value = "bookmaker") @RequestParam String bookmaker,

@@ -1,6 +1,6 @@
 package service.general.authService.refreshTokenService.dao;
 
-import dto.request.PostgresRequest;
+import dto.PostgresRequest;
 import org.junit.jupiter.api.Test;
 import service.app.authRequestService.authService.refreshTokenService.dao.RefreshTokenDao;
 import service.app.authRequestService.authService.refreshTokenService.dao.RefreshTokenDaoImpl;

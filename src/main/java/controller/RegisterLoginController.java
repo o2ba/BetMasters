@@ -6,7 +6,7 @@ import common.exception.gen.UserNotFoundException;
 import common.exception.login.WrongEmailPasswordException;
 import common.exception.register.DuplicateEmailException;
 import common.exception.register.ValidationException;
-import common.model.security.SensitiveData;
+import common.security.SensitiveData;
 import common.record.LoginPayload;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -52,7 +52,6 @@ public class RegisterLoginController {
         @ApiParam(value = "The password of the user.", required = true) @RequestParam SensitiveData password) {
         try {
             LoginPayload tp = loginService.login(email, password);
-            System.out.println("UID: " + tp.uid());
             Gson gson = new Gson();
             return ResponseEntity.ok(gson.toJson(tp));
         } catch (UserNotFoundException e) {

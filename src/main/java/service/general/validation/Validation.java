@@ -1,6 +1,6 @@
 package service.general.validation;
 
-import common.model.security.SensitiveData;
+import common.security.SensitiveData;
 
 import java.time.LocalDate;
 

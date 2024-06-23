@@ -1,6 +1,6 @@
 package service.general.springService;
 
-import common.model.security.SensitiveData;
+import common.security.SensitiveData;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package service.app.authRequestService.authService.refreshTokenService.token;
 
-import common.model.security.NonSensitiveData;
+import common.security.NonSensitiveData;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
