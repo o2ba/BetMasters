@@ -7,7 +7,7 @@ import common.exception.gen.UserNotFoundException;
 import common.exception.login.WrongEmailPasswordException;
 import common.model.security.EncryptedData;
 import common.model.security.SensitiveData;
-import common.record.TokenPayload;
+import common.record.LoginPayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.app.noAuthRequestService.login.dao.LoginServiceDao;
@@ -42,18 +42,18 @@ public class LoginServiceImpl implements LoginService {
      * @throws InternalServerError   if an internal error occurs
      */
     @Override
-    public TokenPayload login(String email, SensitiveData password)
+    public LoginPayload login(String email, SensitiveData password)
     throws UserNotFoundException, InternalServerError, WrongEmailPasswordException
     {
         LoginServiceDao.LoginServiceReturn userReturn = loginServiceDao.getStoredPasswordForEmail(email);
         EncryptedData pw = userReturn.password();
         if (password.matchesEncryptedData(pw)) {
             try {
-                return new TokenPayload(jwtTokenService.generateEncryptedToken(
+                return new LoginPayload(jwtTokenService.generateEncryptedToken(
                         email,
                         userReturn.uid(),
                         86400000L
-                ), null);
+                ), null, userReturn.uid(), userReturn.email());
             } catch (JOSEException e) {
                 throw new InternalServerError("Error generating token");
             }

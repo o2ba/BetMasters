@@ -37,6 +37,16 @@ public interface AuthorizationService {
     TokenPayload authorizeRequest(String jwtToken, String refreshToken, int uid, String email)
     throws NotAuthorizedException, InternalServerError;
 
+    /**
+     * Attempts to authorize a request, given a JWT token.
+     * Will either return a new JWT token and refresh token, or an error message.
+     *
+     * @param jwtToken The JWT token.
+     * @return The new tokens, if necessary.
+     */
+    TokenPayload authorizeRequest(String jwtToken, int uid, String email)
+    throws NotAuthorizedException, InternalServerError;
+
 
     /**
      * Generates fresh tokens for a user.

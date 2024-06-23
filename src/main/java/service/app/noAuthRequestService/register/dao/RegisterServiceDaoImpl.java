@@ -1,15 +1,19 @@
 package service.app.noAuthRequestService.register.dao;
 
 import common.exception.InternalServerError;
+import common.exception.gen.TimeoutException;
 import common.exception.register.DuplicateEmailException;
 import common.model.security.SensitiveData;
 import dto.request.PostgresRequest;
+import okio.Timeout;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class RegisterServiceDaoImpl implements RegisterServiceDao {
@@ -33,22 +37,26 @@ public class RegisterServiceDaoImpl implements RegisterServiceDao {
      */
     @Override
     public int addUser(String first_name, String last_name, String email, SensitiveData password, LocalDate dob, LocalDateTime createdAt)
-    throws InternalServerError, DuplicateEmailException {
-        try (ResultSet rs = postgresRequest.executeQuery(RegisterServiceQueries.ADD_USER.getQuery(),
-                first_name, last_name, email, password.encrypt().toString(), dob, createdAt)) {
-            if (rs.next()) {
-                return rs.getInt("uid");
-            } else {
-                throw new InternalServerError("Error while adding user");
-            }
+    throws InternalServerError, DuplicateEmailException, TimeoutException {
+
+        try {
+            List<Map<String, Object>> result =
+                    postgresRequest.safeExecuteQuery(RegisterServiceQueries.ADD_USER.getQuery(),
+                    first_name, last_name, email, password.encrypt().toString(), dob, createdAt);
+
+            return (int) result.get(0).get("uid");
+
         } catch (SQLException e) {
-            // If the exception is from duplicate email
-            if (e.getSQLState().equals("23505")) {
+            if (e.getSQLState() == null) {
+                throw new TimeoutException("Timed out while adding user");
+            } else if (e.getSQLState().equals("23505")) {
                 throw new DuplicateEmailException("Email already exists");
             } else {
-                throw new InternalServerError("Error while adding user");
+                throw new InternalServerError("Error while adding user. SQL ERROR: " + e.getSQLState() + " " + e.getMessage());
             }
         }
+
+
     }
 
 }

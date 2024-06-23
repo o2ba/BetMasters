@@ -7,7 +7,7 @@ import common.model.security.EncryptedData;
 
 public interface LoginServiceDao {
 
-    record LoginServiceReturn (EncryptedData password, int uid) {}
+    record LoginServiceReturn (EncryptedData password, int uid, String email) {}
 
     @DatabaseOperation
     LoginServiceReturn getStoredPasswordForEmail(String email)

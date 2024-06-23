@@ -73,6 +73,7 @@ public class FixtureOddsResponse<T> {
     public FixtureOddsResponse(JsonElement jsonData, Function<JsonElement, T> converter, int responseCode,
                                @NotNull Map<String, List<String>> responseHeaders) {
 
+
         long startTime = System.currentTimeMillis();
 
         this.responseHeaders = responseHeaders;
@@ -93,6 +94,7 @@ public class FixtureOddsResponse<T> {
         try {
             this.payload = toObjectList(jsonData.getAsJsonObject().get("response"), converter);
         } catch (Exception e) {
+            System.out.println("Failed to parse payload. Error: " + e.getMessage());
             this.payload = new ArrayList<>();
         }
 

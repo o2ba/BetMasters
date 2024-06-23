@@ -122,6 +122,8 @@ public class FixtureService {
      */
     public @NotNull FixtureOddsResponse<FixtureBetsObject> getFixturesBets() {
 
+        System.out.println("Params: " + betsParams());
+
         long timeFootballRequest = System.currentTimeMillis();
         logger.debug("Sending request to [Odds] with parameters: {}", betsParams());
 
@@ -130,8 +132,10 @@ public class FixtureService {
         timeFootballRequest = System.currentTimeMillis() - timeFootballRequest;
 
         logger.debug("Request to [Odds] came back with %d results with response code %s and took %d milliseconds.".formatted(response.getAmountOfResults(), response.getResponseCode(), timeFootballRequest));
+        System.out.println(response.getPayload().toString());
 
         if (!response.getError().isEmpty()) {
+            System.out.println(response.getError().toString());
             logger.error("Error in the request for odds. " + "Error: {}", response.getError().getAsJsonArray().toString());
         }
 
@@ -275,6 +279,8 @@ public class FixtureService {
 
         assert request.getResponseHeaders() != null;
         this.responseHeaders = request.getResponseHeaders();
+
+        System.out.println(fixtures);
 
         FixtureOddsResponse<T> response = new FixtureOddsResponse<>(fixtures, converter, request.getResponseCode(),
                 responseHeaders);

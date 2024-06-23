@@ -4,9 +4,9 @@ import common.exception.InternalServerError;
 import common.exception.gen.UserNotFoundException;
 import common.exception.login.WrongEmailPasswordException;
 import common.model.security.SensitiveData;
-import common.record.TokenPayload;
+import common.record.LoginPayload;
 
 public interface LoginService {
-    TokenPayload login(String username, SensitiveData password)
+    LoginPayload login(String username, SensitiveData password)
     throws UserNotFoundException, InternalServerError, WrongEmailPasswordException;
 }

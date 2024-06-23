@@ -26,8 +26,12 @@ public class LoginServiceDaoImpl implements LoginServiceDao {
 
         try (ResultSet rs = postgresRequest.executeQuery(LoginServiceQueries.GET_USER_BY_EMAIL_RETURN_ID.getQuery(), email)) {
             if (rs.next()) {
+
+                System.out.println("Password: " + rs.getString("password"));
+                System.out.println("UID: " + rs.getInt("uid"));
+
                 return new LoginServiceReturn( new EncryptedData(rs.getString("password")),
-                        rs.getInt("uid"));
+                        rs.getInt("uid"), rs.getString("email"));
             } else {
                 throw new UserNotFoundException("User not found with email: " + email + ".");
             }

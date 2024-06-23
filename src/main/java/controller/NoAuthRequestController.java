@@ -7,7 +7,7 @@ import common.exception.login.WrongEmailPasswordException;
 import common.exception.register.DuplicateEmailException;
 import common.exception.register.ValidationException;
 import common.model.security.SensitiveData;
-import common.record.TokenPayload;
+import common.record.LoginPayload;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
@@ -51,7 +51,8 @@ public class NoAuthRequestController {
         @ApiParam(value = "The email of the user.", required = true) @RequestParam String email,
         @ApiParam(value = "The password of the user.", required = true) @RequestParam SensitiveData password) {
         try {
-            TokenPayload tp = loginService.login(email, password);
+            LoginPayload tp = loginService.login(email, password);
+            System.out.println("UID: " + tp.uid());
             Gson gson = new Gson();
             return ResponseEntity.ok(gson.toJson(tp));
         } catch (UserNotFoundException e) {

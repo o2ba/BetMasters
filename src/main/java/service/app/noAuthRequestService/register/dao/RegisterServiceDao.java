@@ -2,6 +2,7 @@ package service.app.noAuthRequestService.register.dao;
 
 import common.annotation.DatabaseOperation;
 import common.exception.InternalServerError;
+import common.exception.gen.TimeoutException;
 import common.exception.register.DuplicateEmailException;
 import common.model.security.SensitiveData;
 import org.springframework.stereotype.Component;
@@ -18,5 +19,5 @@ public interface RegisterServiceDao {
                 SensitiveData password,
                 LocalDate dob,
                 LocalDateTime createdAt)
-    throws InternalServerError, DuplicateEmailException;
+    throws InternalServerError, DuplicateEmailException, TimeoutException;
 }

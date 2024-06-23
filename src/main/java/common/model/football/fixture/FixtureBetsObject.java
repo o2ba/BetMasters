@@ -20,6 +20,8 @@ public class FixtureBetsObject {
 
     public FixtureBetsObject(JsonElement input) {
 
+        System.out.println(input);
+
         JsonObject fixture = input.getAsJsonObject().get("fixture").getAsJsonObject();
         JsonObject league = input.getAsJsonObject().get("league").getAsJsonObject();
         JsonArray bookmakers = input.getAsJsonObject().get("bookmakers").getAsJsonArray();

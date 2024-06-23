@@ -43,7 +43,29 @@ public final class AuthorizationServiceBasic implements AuthorizationService {
                 throw new NotAuthorizedException("Invalid JWT token.");
             }
         } catch (Exception e) {
-            throw new InternalServerError("Failed to authorize request.");
+            throw new NotAuthorizedException("Failed to authorize request.");
+        }
+    }
+
+    /**
+     * Attempts to authorize a request, given a JWT token.
+     * Will either return a new JWT token and refresh token, or an error message.
+     *
+     * @param jwtToken     The JWT token.
+     * @param uid         The user ID.
+     * @param email      The user's email.
+     * @return The new tokens, if necessary.
+     */
+    @Override
+    public TokenPayload authorizeRequest(String jwtToken, int uid, String email) throws NotAuthorizedException, InternalServerError {
+        try {
+            if (jwtTokenService.verifyEncryptedToken(jwtToken, email, uid)) {
+                return new TokenPayload(SuccessState.SUCCESS, null, null);
+            } else {
+                throw new NotAuthorizedException("Invalid JWT token.");
+            }
+        } catch (Exception e) {
+            throw new NotAuthorizedException("Failed to authorize request.");
         }
     }
 

@@ -6,10 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * PostgresRequest is a class that handles database operations using HikariCP for connection pooling.
@@ -139,7 +140,6 @@ public final class PostgresRequest {
      * @throws SQLException if a database access error occurs.
      */
     public ResultSet executeQuery(String query, Object... params) throws SQLException {
-
         try {
             Connection connection = dataSource.getConnection();
             PreparedStatement stmt = prepareStatement(connection, query);
@@ -150,6 +150,32 @@ public final class PostgresRequest {
             logger.debug("Query SQLException details: SQLState={}, ErrorCode={}", e.getSQLState(), e.getErrorCode());
             throw e;
         }
+    }
+
+    public List<Map<String, Object>> safeExecuteQuery(String query, Object... params) throws SQLException {
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement stmt = prepareStatement(connection, query)) {
+            setParameters(stmt, params);
+            try (ResultSet rs = stmt.executeQuery()) {
+                ResultSetMetaData metaData = rs.getMetaData();
+                int columnCount = metaData.getColumnCount();
+
+                while (rs.next()) {
+                    Map<String, Object> row = new HashMap<>();
+                    for (int i = 1; i <= columnCount; i++) {
+                        row.put(metaData.getColumnName(i), rs.getObject(i));
+                    }
+                    resultList.add(row);
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Query operation failed: {}", e.getMessage());
+            logger.debug("Query SQLException details: SQLState={}, ErrorCode={}", e.getSQLState(), e.getErrorCode());
+            throw e;
+        }
+
+        return resultList;
     }
 
     /**

@@ -71,6 +71,20 @@ public class AuthorizationServiceAdvanced implements AuthorizationService {
     }
 
     /**
+     * Attempts to authorize a request, given a JWT token.
+     * Will either return a new JWT token and refresh token, or an error message.
+     *
+     * @param jwtToken The JWT token.
+     * @param uid
+     * @param email
+     * @return The new tokens, if necessary.
+     */
+    @Override
+    public TokenPayload authorizeRequest(String jwtToken, int uid, String email) throws NotAuthorizedException, InternalServerError {
+        return null;
+    }
+
+    /**
      * Generates fresh tokens for a user.
      * This method is recommended to be called after a successful login, or when a user has registered.
      * The JWT token is encrypted using RSA, and the refresh token is stored in the database.
