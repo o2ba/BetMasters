@@ -25,15 +25,15 @@ import service.app.noAuthRequestService.register.RegisterService;
 import java.time.LocalDate;
 
 @Controller
-public class NoAuthRequestController {
+public class RegisterLoginController {
 
     private final LoginService loginService;
     private final RegisterService registerService;
 
-    private static final Logger logger = LoggerFactory.getLogger(NoAuthRequestController.class);
+    private static final Logger logger = LoggerFactory.getLogger(RegisterLoginController.class);
 
     @Autowired
-    public NoAuthRequestController(LoginService loginService, RegisterService registerService) {
+    public RegisterLoginController(LoginService loginService, RegisterService registerService) {
         this.loginService = loginService;
         this.registerService = registerService;
 

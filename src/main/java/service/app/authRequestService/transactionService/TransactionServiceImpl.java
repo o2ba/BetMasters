@@ -2,20 +2,29 @@ package service.app.authRequestService.transactionService;
 
 import common.exception.InternalServerError;
 import common.exception.NotAuthorizedException;
+import common.exception.transactions.InvalidRecipientException;
+import common.exception.transactions.NotEnoughBalanceException;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.app.authRequestService.authService.AuthorizationService;
+import service.app.authRequestService.transactionService.dao.TransactionDao;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
     AuthorizationService authService;
+    TransactionDao transactionDao;
 
     @Autowired
-    public TransactionServiceImpl(AuthorizationService authorizationService) {
+    public TransactionServiceImpl(AuthorizationService authorizationService, TransactionDao transactionDao) {
         this.authService = authorizationService;
+        this.transactionDao = transactionDao;
     }
 
 
@@ -23,6 +32,7 @@ public class TransactionServiceImpl implements TransactionService {
     public void deposit(String jwtToken, String email, int uid, double amount) throws NotAuthorizedException,
             SQLException, InternalServerError {
         authService.authorizeRequest(jwtToken, uid, email);
+        transactionDao.deposit(uid, amount);
     }
 
     /**
@@ -35,26 +45,27 @@ public class TransactionServiceImpl implements TransactionService {
      */
     @Override
     public void withdraw(String jwtToken, String email, int uid, double amount) throws NotAuthorizedException,
-            SQLException, InternalServerError {
+            SQLException, InternalServerError, NotEnoughBalanceException {
         authService.authorizeRequest(jwtToken, uid, email);
 
+        // Check for sufficient balance
+        double balance = transactionDao.getBalance(uid);
+        if (balance < amount) {
+            throw new NotEnoughBalanceException("Not enough balance");
+        }
+        transactionDao.withdraw(uid, amount);
     }
 
 
     @Override
-    public void transfer(String jwtToken, String email, int uid, int receiverID, double amount) throws NotAuthorizedException, SQLException, InternalServerError {
+    public void transfer(String jwtToken, String email, int uid, int receiverID, double amount) throws NotAuthorizedException, SQLException, InternalServerError, NotEnoughBalanceException, InvalidRecipientException {
         authService.authorizeRequest(jwtToken, uid, email);
-
-    }
-
-    @Override
-    public void getTransactions(String jwtToken, String email, int uid) throws NotAuthorizedException, SQLException, InternalServerError {
-
-    }
-
-    @Override
-    public void getBalance(String jwtToken, String email, int uid) throws NotAuthorizedException, SQLException, InternalServerError {
-
+        // Check for sufficient balance
+        double balance = transactionDao.getBalance(uid);
+        if (balance < amount) {
+            throw new NotEnoughBalanceException("Not enough balance");
+        }
+        transactionDao.transfer(uid, receiverID, amount);
     }
 
     /**
@@ -65,7 +76,7 @@ public class TransactionServiceImpl implements TransactionService {
      */
     @Override
     public void addMoneyInternal(int uid, double amount) throws SQLException, InternalServerError {
-
+        transactionDao.addMoneyInternal(uid, amount, "WIN");
     }
 
     /**
@@ -75,7 +86,33 @@ public class TransactionServiceImpl implements TransactionService {
      * @param amount
      */
     @Override
-    public void withdrawMoneyInternal(int uid, double amount) throws SQLException, InternalServerError {
+    public void withdrawMoneyInternal(int uid, double amount) throws SQLException, InternalServerError, NotEnoughBalanceException {
+        // Check for sufficient balance
+        double balance = transactionDao.getBalance(uid);
+        if (balance < amount) {
+            throw new NotEnoughBalanceException("Not enough balance");
+        }
+        transactionDao.withdrawMoneyInternal(uid, amount, "BET");
+    }
 
+    @Override
+    public JSONArray getTransactions(String jwtToken, String email, int uid) throws NotAuthorizedException, SQLException, InternalServerError {
+        authService.authorizeRequest(jwtToken, uid, email);
+        List<Map<String, Object>> transactions = transactionDao.getTransactions(uid);
+
+        JSONArray jsonArray = new JSONArray();
+        for (Map<String, Object> transaction : transactions) {
+            JSONObject jsonObject = new JSONObject(transaction);
+            jsonArray.put(jsonObject);
+        }
+
+        return jsonArray;
+    }
+
+    @Override
+    public double getBalance(String jwtToken, String email, int uid) throws NotAuthorizedException, SQLException,
+            InternalServerError {
+        authService.authorizeRequest(jwtToken, uid, email);
+        return transactionDao.getBalance(uid);
     }
 }
