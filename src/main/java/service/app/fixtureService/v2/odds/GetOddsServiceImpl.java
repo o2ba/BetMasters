@@ -1,13 +1,12 @@
-package service.app.fixtureService.v2;
+package service.app.fixtureService.v2.odds;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
-import service.app.fixtureService.v2.dto.FootballResponse;
-import service.app.fixtureService.v2.dto.GetOdds;
+import service.app.fixtureService.v2.common.model.FootballResponse;
+import service.app.fixtureService.v2.odds.dao.GetOddsDao;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,14 +15,14 @@ import java.util.Map;
 @Service
 public class GetOddsServiceImpl implements GetOddsService {
 
-    GetOdds getOdds;
+    GetOddsDao getOdds;
 
-    public GetOddsServiceImpl(GetOdds getOdds) {
+    public GetOddsServiceImpl(GetOddsDao getOdds) {
         this.getOdds = getOdds;
     }
 
     @Override
-    public List<Map<String, Double>> getOdds(String fixtureId, int oddID) throws Exception {
+    public Map<String, Double> getOdds(String fixtureId, int oddID) throws Exception {
 
         FootballResponse footballResponse = getOdds.getOdds(fixtureId, oddID);
         assert footballResponse != null;
@@ -57,6 +56,6 @@ public class GetOddsServiceImpl implements GetOddsService {
             throw new Exception("Error while getting odds for fixture" + e.getMessage());
         }
 
-        return List.of(oddsMap);
+        return oddsMap;
     }
 }

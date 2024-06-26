@@ -1,4 +1,4 @@
-package service.app.fixtureService.v2.model.bet;
+package service.app.fixtureService.v2.odds;
 
 import java.util.Arrays;
 import java.util.List;

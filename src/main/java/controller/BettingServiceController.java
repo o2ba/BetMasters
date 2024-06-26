@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import service.app.authRequestService.simpleBettingService.BettingService;
-import service.app.fixtureService.v2.GetBetTypesService;
+import service.app.fixtureService.v2.odds.GetBetTypesService;
 
 @Controller
 public class BettingServiceController {

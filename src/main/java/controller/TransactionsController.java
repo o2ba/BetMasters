@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import service.app.authRequestService.transactionService.TransactionService;
 
+import java.util.Map;
+
 
 @Controller
 public class TransactionsController {
@@ -88,7 +90,9 @@ public class TransactionsController {
             return ResponseEntity.status(500).body("Internal server error");
         }
 
+
         return ResponseEntity.ok("Transferred " + amount + " to account " + receiverID);
+
     }
 
 
@@ -106,7 +110,13 @@ public class TransactionsController {
             return ResponseEntity.status(500).body("Internal server error");
         }
 
-        return ResponseEntity.ok("Balance: " + balance);
+        // response { "balance": 100.0 }
+
+        Map<String, Double> balanceMap = Map.of("balance", balance);
+
+        // convert to gson string
+        Gson gson = new Gson();
+        return ResponseEntity.ok(gson.toJson(balanceMap));
     }
 
     @GetMapping("/transactionHistory")

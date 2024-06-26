@@ -1,11 +1,12 @@
-package service.app.fixtureService.v2.dto;
+package service.app.fixtureService.v2.odds.dao;
 
 import dto.httpRequest.exception.RequestSendingException;
+import service.app.fixtureService.v2.common.model.FootballResponse;
 
 /**
  * Retrieve odds for a fixture
  */
-public interface GetOdds {
+public interface GetOddsDao {
     /**
      * Retrieve odds for a fixture. Uses the default bookmaker
      * @param fixtureId The ID of the fixture to get the odds for

@@ -3,7 +3,7 @@ package service.app.authRequestService.simpleBettingService.dao;
 import common.exception.InternalServerError;
 import common.exception.transactions.NotEnoughBalanceException;
 import service.app.authRequestService.simpleBettingService.exceptions.GameAlreadyStartedOrCancelledException;
-import service.app.fixtureService.v2.model.bet.BetTypes;
+import service.app.fixtureService.v2.odds.BetTypes;
 
 public class BettingDaoImpl implements BettingDao {
 

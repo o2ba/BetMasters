@@ -1,4 +1,4 @@
-package service.app.fixtureService.v2.dto;
+package service.app.fixtureService.v2.common.model;
 
 import com.google.gson.JsonArray;
 

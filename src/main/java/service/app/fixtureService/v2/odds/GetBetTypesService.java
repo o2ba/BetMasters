@@ -1,4 +1,4 @@
-package service.app.fixtureService.v2;
+package service.app.fixtureService.v2.odds;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -6,7 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
-import service.app.fixtureService.v2.model.bet.BetTypes;
 
 import java.util.ArrayList;
 import java.util.HashMap;

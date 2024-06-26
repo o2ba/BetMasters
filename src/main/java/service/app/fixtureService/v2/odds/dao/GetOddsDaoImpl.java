@@ -1,4 +1,4 @@
-package service.app.fixtureService.v2.dto;
+package service.app.fixtureService.v2.odds.dao;
 
 import com.google.gson.JsonElement;
 import dto.ApiRequest;
@@ -6,16 +6,17 @@ import dto.httpRequest.exception.RequestSendingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import service.app.fixtureService.v2.common.model.FootballResponse;
 
 import java.util.Map;
 
 @Service
-public class GetOddsImpl implements GetOdds {
+public class GetOddsDaoImpl implements GetOddsDao {
 
     ApiRequest apiRequest;
 
     @Autowired
-    public GetOddsImpl (ApiRequest apiRequest) {
+    public GetOddsDaoImpl(ApiRequest apiRequest) {
         this.apiRequest = apiRequest;
     }
 
