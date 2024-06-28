@@ -9,10 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import service.app.authRequestService.simpleBettingService.BettingService;
 import service.app.fixtureService.v2.odds.GetBetTypesService;
 
@@ -43,20 +40,14 @@ public class BettingServiceController {
 
         try {
             bettingService.placeBet(jwtToken, email, uid, fixtureID, betType, selectedBet, amount);
-        } catch (InternalServerError e) {
-            return ResponseEntity.badRequest().body("Internal server error");
-        } catch (NotAuthorizedException e) {
-            return ResponseEntity.badRequest().body("Not authorized");
-        } catch (ValidationException e) {
-            return ResponseEntity.badRequest().body("Validation error");
-        } catch (NotEnoughBalanceException e) {
-            return ResponseEntity.badRequest().body("Not enough balance");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Request Failed: " + e.getMessage());
         }
 
         return ResponseEntity.ok("Bet placed successfully");
     }
 
-    @PostMapping("/betting/cancel")
+    @DeleteMapping("/betting/cancel")
     @ApiOperation(value = "Cancel a bet", tags = "Betting")
     public ResponseEntity<String> cancelBet(
             @ApiParam(value = "The JWT token of the user", required = true) @RequestParam String jwtToken,
@@ -73,6 +64,29 @@ public class BettingServiceController {
             @ApiParam(value = "The email of the user", required = true) @RequestParam String email,
             @ApiParam(value = "The user ID", required = true) @RequestParam int uid) {
         return ResponseEntity.ok("Bets for user");
+    }
+
+    @PutMapping("/betting/claim-all")
+    @ApiOperation(value = "Claim all bets", tags = "Betting")
+    public ResponseEntity<String> claimAllBets(
+            @ApiParam(value = "The JWT token of the user", required = true) @RequestParam String jwtToken,
+            @ApiParam(value = "The email of the user", required = true) @RequestParam String email,
+            @ApiParam(value = "The user ID", required = true) @RequestParam int uid) {
+        try {
+            bettingService.claimBets(jwtToken, email, uid);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Request Failed: " + e.getMessage());
+        }
+        return ResponseEntity.ok("Bets claimed successfully");
+    }
+
+    @GetMapping("/betting/total-blocked-amount")
+    @ApiOperation(value = "Get the total blocked amount", tags = "Betting")
+    public ResponseEntity<String> getTotalBlockedAmount(
+            @ApiParam(value = "The JWT token of the user", required = true) @RequestParam String jwtToken,
+            @ApiParam(value = "The email of the user", required = true) @RequestParam String email,
+            @ApiParam(value = "The user ID", required = true) @RequestParam int uid) {
+        return ResponseEntity.ok("Total blocked amount");
     }
 
 }

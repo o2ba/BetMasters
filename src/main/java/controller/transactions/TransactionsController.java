@@ -8,6 +8,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.json.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +24,8 @@ import java.util.Map;
 @RestController
 @Api(tags = "Transactions")
 public class TransactionsController {
+
+    private static final Logger logger = LoggerFactory.getLogger(TransactionsController.class);
 
     TransactionService transactionService;
 
@@ -43,6 +47,7 @@ public class TransactionsController {
         } catch (NotAuthorizedException e) {
             return ResponseEntity.status(401).body("Not authorized");
         } catch (Exception e) {
+            logger.error("Internal server error", e);
             return ResponseEntity.status(500).body("Internal server error");
         }
 
@@ -63,6 +68,7 @@ public class TransactionsController {
         } catch (NotEnoughBalanceException e) {
             return ResponseEntity.status(400).body("Not enough balance");
         } catch (Exception e) {
+            logger.error("Internal server error", e);
             return ResponseEntity.status(500).body("Internal server error");
         }
 
@@ -107,6 +113,7 @@ public class TransactionsController {
         } catch (NotAuthorizedException e) {
             return ResponseEntity.status(401).body("Not authorized");
         } catch (Exception e) {
+            logger.error("Internal server error", e);
             return ResponseEntity.status(500).body("Internal server error");
         }
 

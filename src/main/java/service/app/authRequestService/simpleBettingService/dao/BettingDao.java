@@ -1,11 +1,10 @@
 package service.app.authRequestService.simpleBettingService.dao;
 
 import common.exception.InternalServerError;
-import common.exception.transactions.NotEnoughBalanceException;
-import service.app.fixtureService.v2.odds.BetTypes;
-import service.app.authRequestService.simpleBettingService.exceptions.GameAlreadyStartedOrCancelledException;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 public interface BettingDao {
 
@@ -26,4 +25,13 @@ public interface BettingDao {
                   BigDecimal odds
                   )
     throws InternalServerError;
+
+    /**
+     * Get all the bets of a user
+     *
+     * @param uid The user ID
+     * @return The bets of the user
+     * @throws InternalServerError If there is an error with the server
+     */
+    List<Map<String, Object>> getBets(int uid) throws InternalServerError;
 }

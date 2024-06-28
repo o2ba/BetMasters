@@ -189,6 +189,11 @@ public class TransactionDaoImpl implements TransactionDao {
             );
 
             Object sumObject = result.get(0).get("sum");
+
+            if (sumObject == null) {
+                return 0;
+            }
+
             double sum;
             if (sumObject instanceof BigDecimal) {
                 sum = ((BigDecimal) sumObject).doubleValue();

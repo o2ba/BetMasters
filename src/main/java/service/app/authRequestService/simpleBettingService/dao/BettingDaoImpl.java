@@ -1,14 +1,13 @@
 package service.app.authRequestService.simpleBettingService.dao;
 
 import common.exception.InternalServerError;
-import common.exception.transactions.NotEnoughBalanceException;
 import dto.PostgresRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import service.app.authRequestService.simpleBettingService.exceptions.GameAlreadyStartedOrCancelledException;
-import service.app.fixtureService.v2.odds.BetTypes;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class BettingDaoImpl implements BettingDao {
@@ -32,6 +31,25 @@ public class BettingDaoImpl implements BettingDao {
             );
 
             return 0;
+        } catch (Exception e) {
+            throw new InternalServerError("An error occurred while processing the deposit");
+        }
+    }
+
+    /**
+     * Get all the bets of a user
+     *
+     * @param uid The user ID
+     * @return The bets of the user
+     * @throws InternalServerError If there is an error with the server
+     */
+    @Override
+    public List<Map<String, Object>> getBets(int uid) throws InternalServerError {
+        try {
+            return postgresRequest.safeExecuteQuery(
+                    BettingQueries.GET_BETS.getQuery(),
+                    uid
+            );
         } catch (Exception e) {
             throw new InternalServerError("An error occurred while processing the deposit");
         }
