@@ -1,11 +1,11 @@
-package controller;
+package controller.fixture;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Hidden;
 import service.app.fixtureService.v1.model.FixtureObject;
 import service.app.fixtureService.v1.FixtureService;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Api(value = "FixtureBetsController", description = "FixtureBetsController")
 @Controller
+@Hidden
 public class FixtureBetsController {
     @ApiOperation(value = "Get fixtures with odds", notes = "This endpoint allows you to get fixtures with odds.")
     @GetMapping("/v1/fixturesWithOdds")

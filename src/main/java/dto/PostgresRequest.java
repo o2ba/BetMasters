@@ -127,31 +127,6 @@ public class PostgresRequest {
         return conn.prepareStatement(sql);
     }
 
-    /**
-     * Executes a SQL query and returns the ResultSet.
-     * <p>
-     * This method prepares a SQL query using the provided parameters, executes it, and
-     * returns the ResultSet containing the query results.
-     * </p>
-     *
-     * @param query the SQL query to be executed.
-     * @param params the parameters for the prepared statement.
-     * @return the ResultSet containing the query results.
-     * @throws SQLException if a database access error occurs.
-     */
-    public ResultSet executeQuery(String query, Object... params) throws SQLException {
-        try {
-            Connection connection = dataSource.getConnection();
-            PreparedStatement stmt = prepareStatement(connection, query);
-            setParameters(stmt, params);
-            return stmt.executeQuery();
-        } catch (SQLException e) {
-            logger.error("Query operation failed: {}", e.getMessage());
-            logger.debug("Query SQLException details: SQLState={}, ErrorCode={}", e.getSQLState(), e.getErrorCode());
-            throw e;
-        }
-    }
-
     public List<Map<String, Object>> safeExecuteQuery(String query, Object... params) throws SQLException {
         List<Map<String, Object>> resultList = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
@@ -174,7 +149,6 @@ public class PostgresRequest {
             logger.debug("Query SQLException details: SQLState={}, ErrorCode={}", e.getSQLState(), e.getErrorCode());
             throw e;
         }
-
         return resultList;
     }
 
@@ -229,5 +203,14 @@ public class PostgresRequest {
             dataSource.close();
             logger.info("HikariCP DataSource closed.");
         }
+    }
+
+
+    public int getTotalConnections() {
+        return dataSource.getHikariPoolMXBean().getTotalConnections();
+    }
+
+    public int getActiveConnections() {
+        return dataSource.getHikariPoolMXBean().getActiveConnections();
     }
 }

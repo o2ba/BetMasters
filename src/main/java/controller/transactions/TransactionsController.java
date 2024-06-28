@@ -1,7 +1,6 @@
-package controller;
+package controller.transactions;
 
 import com.google.gson.Gson;
-import common.exception.InternalServerError;
 import common.exception.NotAuthorizedException;
 import common.exception.transactions.InvalidRecipientException;
 import common.exception.transactions.NotEnoughBalanceException;
@@ -11,16 +10,17 @@ import io.swagger.annotations.ApiParam;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import service.app.authRequestService.transactionService.TransactionService;
 
 import java.util.Map;
 
 
-@Controller
+@RestController
+@Api(tags = "Transactions")
 public class TransactionsController {
 
     TransactionService transactionService;
@@ -30,8 +30,8 @@ public class TransactionsController {
         this.transactionService = transactionService;
     }
 
-    @PostMapping("/deposit")
-    @ApiOperation(value = "Deposit money into the account")
+    @PostMapping("/transaction/deposit")
+    @ApiOperation(value = "Deposit money into the account", tags = "Transactions")
     public ResponseEntity<String> deposit(
             @ApiParam(value = "JWT token", required = true) @RequestParam String jwtToken,
             @ApiParam(value = "Email of the user", required = true) @RequestParam String email,
@@ -49,8 +49,8 @@ public class TransactionsController {
         return ResponseEntity.ok("Deposited " + amount + " into account");
     }
 
-    @PostMapping("/withdraw")
-    @ApiOperation(value = "Withdraw money from the account")
+    @PostMapping("/transaction/withdraw")
+    @ApiOperation(value = "Withdraw money from the account", tags = "Transactions")
     public ResponseEntity<String> withdraw(
             @ApiParam(value = "JWT token", required = true) @RequestParam String jwtToken,
             @ApiParam(value = "Email of the user", required = true) @RequestParam String email,
@@ -69,8 +69,8 @@ public class TransactionsController {
         return ResponseEntity.ok("Withdrew " + amount + " from account");
     }
 
-    @PostMapping("/transfer")
-    @ApiOperation(value = "Transfer money from one account to another")
+    @PostMapping("/transaction/transfer")
+    @ApiOperation(value = "Transfer money from one account to another", tags = "Transactions")
     public ResponseEntity<String> transfer(
             @ApiParam(value = "JWT token", required = true) @RequestParam String jwtToken,
             @ApiParam(value = "Email of the user", required = true) @RequestParam String email,
@@ -96,8 +96,8 @@ public class TransactionsController {
     }
 
 
-    @GetMapping("/getBalance")
-    @ApiOperation(value = "Get the balance of the account")
+    @GetMapping("/transaction/get-balance")
+    @ApiOperation(value = "Get the balance of the account", tags = "Transactions")
     public ResponseEntity<String> getBalance(String jwtToken, String email, int userId) {
 
         double balance;
@@ -119,8 +119,8 @@ public class TransactionsController {
         return ResponseEntity.ok(gson.toJson(balanceMap));
     }
 
-    @GetMapping("/transactionHistory")
-    @ApiOperation(value = "Get the transaction history of the account")
+    @GetMapping("/transaction/history")
+    @ApiOperation(value = "Get the transaction history of the account", tags = "Transactions")
     public ResponseEntity<String> transactionHistory(String jwtToken, String email, int userId) {
         JSONArray transactions;
 

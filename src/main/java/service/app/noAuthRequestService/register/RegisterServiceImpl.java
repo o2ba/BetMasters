@@ -1,11 +1,16 @@
 package service.app.noAuthRequestService.register;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.nimbusds.jose.JOSEException;
 import common.exception.InternalServerError;
 import common.exception.register.DuplicateEmailException;
 import common.exception.register.ValidationException;
 import common.security.SensitiveData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import service.app.authRequestService.authService.jwtTokenService.JwtTokenService;
 import service.app.noAuthRequestService.register.dao.RegisterServiceDao;
 import service.general.validation.Validation;
 
@@ -15,11 +20,16 @@ import java.time.LocalDateTime;
 @Service
 public class RegisterServiceImpl implements RegisterService {
 
+    @Value("${jwt.token.lifetime}")
+    Long jwtTokenLifetime;
+
+    JwtTokenService jwtTokenService;
     RegisterServiceDao registerServiceDao;
     Validation validation;
 
     @Autowired
-    public RegisterServiceImpl(RegisterServiceDao registerServiceDao, Validation validation) {
+    public RegisterServiceImpl(JwtTokenService jwtTokenService, RegisterServiceDao registerServiceDao, Validation validation) {
+        this.jwtTokenService = jwtTokenService;
         this.registerServiceDao = registerServiceDao;
         this.validation = validation;
     }
@@ -38,7 +48,7 @@ public class RegisterServiceImpl implements RegisterService {
      * @throws ValidationException     If the data is not valid
      */
     @Override
-    public void addUser(String first_name, String last_name, String email, SensitiveData password, LocalDate dob)
+    public JsonObject addUser(String first_name, String last_name, String email, SensitiveData password, LocalDate dob)
     throws DuplicateEmailException, InternalServerError, ValidationException {
 
         if(!validation.isNameValid(first_name) || !validation.isNameValid(last_name)) {
@@ -51,11 +61,25 @@ public class RegisterServiceImpl implements RegisterService {
             throw new ValidationException(ValidationException.ValidationFailure.DOB);
         }
 
-        int result = registerServiceDao.addUser(first_name, last_name, email, password, dob, LocalDateTime.now());
+        int uid = registerServiceDao.addUser(first_name, last_name, email, password, dob, LocalDateTime.now());
 
-        if (result == 0) {
-            throw new InternalServerError("Error while adding user");
+        String newJwtToken;
+
+        try {
+            newJwtToken = jwtTokenService.generateEncryptedToken(email, uid, jwtTokenLifetime);
+        } catch (JOSEException e) {
+            throw new InternalServerError(e.getMessage());
         }
+
+        JsonObject response = new JsonObject();
+        response.addProperty("jwtToken", newJwtToken);
+        response.addProperty("uid", uid);
+        response.addProperty("email", email);
+
+        return response;
+
+
     }
+
 
 }

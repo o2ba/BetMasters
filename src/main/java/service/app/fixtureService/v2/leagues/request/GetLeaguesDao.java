@@ -1,4 +1,4 @@
-package service.app.fixtureService.v2.leagues.dao;
+package service.app.fixtureService.v2.leagues.request;
 
 import service.app.fixtureService.v2.common.exception.FootballApiException;
 import service.app.fixtureService.v2.common.model.FootballResponse;

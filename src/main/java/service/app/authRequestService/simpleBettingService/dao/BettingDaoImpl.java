@@ -2,27 +2,38 @@ package service.app.authRequestService.simpleBettingService.dao;
 
 import common.exception.InternalServerError;
 import common.exception.transactions.NotEnoughBalanceException;
+import dto.PostgresRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import service.app.authRequestService.simpleBettingService.exceptions.GameAlreadyStartedOrCancelledException;
 import service.app.fixtureService.v2.odds.BetTypes;
 
+import java.math.BigDecimal;
+
+@Component
 public class BettingDaoImpl implements BettingDao {
 
-    /**
-     * Place a bet on a fixture
-     *
-     * @param fixtureID   The fixture ID
-     * @param uid         The user ID
-     * @param amount
-     * @param betType     The type of bet
-     * @param selectedBet
-     * @param odds        The odds of the bet. This is the amount the user will win if the bet is successful
-     * @return The ID of the bet
-     * @throws NotEnoughBalanceException              If the user does not have enough balance to place the bet
-     * @throws GameAlreadyStartedOrCancelledException If the game has already started or has been cancelled
-     * @throws InternalServerError                    If there is an error with the server
-     */
+    PostgresRequest postgresRequest;
+
+    @Autowired
+    public BettingDaoImpl(PostgresRequest postgresRequest) {
+        this.postgresRequest = postgresRequest;
+    }
+
+
+
     @Override
-    public int placeBet(int fixtureID, int uid, double amount, BetTypes betType, String selectedBet, double odds) throws NotEnoughBalanceException, GameAlreadyStartedOrCancelledException, InternalServerError {
-        return 0;
+    public int placeBet(int fixtureID, int uid, BigDecimal amount, String betType, String selectedBet, BigDecimal odds) throws InternalServerError {
+        try {
+
+            postgresRequest.executeUpdate(
+                    BettingQueries.PLACE.getQuery(),
+                    uid, fixtureID, amount, betType, selectedBet, odds
+            );
+
+            return 0;
+        } catch (Exception e) {
+            throw new InternalServerError("An error occurred while processing the deposit");
+        }
     }
 }

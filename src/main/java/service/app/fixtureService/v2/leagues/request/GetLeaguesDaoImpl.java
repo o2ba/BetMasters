@@ -1,4 +1,4 @@
-package service.app.fixtureService.v2.leagues.dao;
+package service.app.fixtureService.v2.leagues.request;
 
 import com.google.gson.JsonElement;
 import dto.ApiRequest;

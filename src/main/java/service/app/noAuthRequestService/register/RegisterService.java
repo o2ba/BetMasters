@@ -1,5 +1,7 @@
 package service.app.noAuthRequestService.register;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import common.exception.InternalServerError;
 import common.exception.register.DuplicateEmailException;
 import common.exception.register.ValidationException;
@@ -20,6 +22,6 @@ public interface RegisterService {
      * @throws InternalServerError If an error occurs while adding the user
      * @throws ValidationException If the data is not valid
      */
-    void addUser(String first_name, String last_name, String email, SensitiveData password, LocalDate dob)
+    JsonObject addUser(String first_name, String last_name, String email, SensitiveData password, LocalDate dob)
     throws DuplicateEmailException, InternalServerError, ValidationException;
 }

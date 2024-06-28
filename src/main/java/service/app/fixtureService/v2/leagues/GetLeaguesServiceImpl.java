@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.app.fixtureService.v2.common.exception.FootballApiException;
 import service.app.fixtureService.v2.common.model.FootballResponse;
-import service.app.fixtureService.v2.leagues.dao.GetLeaguesDao;
+import service.app.fixtureService.v2.leagues.request.GetLeaguesDao;
 
 import java.util.ArrayList;
 import java.util.List;
