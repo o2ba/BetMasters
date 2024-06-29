@@ -2,23 +2,26 @@ package service.app.authRequestService.simpleBettingService;
 
 import common.exception.InternalServerError;
 import common.exception.NotAuthorizedException;
-import common.exception.register.ValidationException;
 import common.exception.transactions.NotEnoughBalanceException;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import service.app.authRequestService.authService.AuthorizationService;
 import service.app.authRequestService.simpleBettingService.dao.BettingDao;
+import service.app.authRequestService.simpleBettingService.exceptions.BetTypeMismatchException;
 import service.app.authRequestService.simpleBettingService.exceptions.BettingNotPossibleException;
 import service.app.authRequestService.simpleBettingService.exceptions.InvalidBetException;
 import service.app.authRequestService.transactionService.TransactionService;
 import service.app.fixtureService.v2.FixtureService;
+import service.app.fixtureService.v2.common.model.Fixture;
 import service.app.fixtureService.v2.odds.BetTypes;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class BettingServiceImpl implements BettingService {
@@ -39,31 +42,13 @@ public class BettingServiceImpl implements BettingService {
         this.fixtureService = fixtureService;
     }
 
-    /**
-     * Place a bet for the user
-     *
-     * @param jwtToken    The JWT token of the user placing the bet
-     * @param email       The email of the user placing the bet
-     * @param uid         The ID of the user placing the bet
-     * @param fixtureID   The ID of the fixture to bet on
-     * @param betType     The type of bet. For example, "WIN"
-     * @param selectedBet The selected bet. For example, the selected team ("home", "away" or "draw")
-     * @param amount      The amount to bet
-     * @throws BettingNotPossibleException The bet is not possible to place. For example, the fixture has already started
-     * @throws InvalidBetException         The bet is invalid. For example, the user has a non-existent bet type
-     * @throws NotEnoughBalanceException   The user does not have enough balance to place the bet
-     * @throws NotAuthorizedException      The user is not authorized to place the bet
-     * @throws InternalServerError         An error occurred in the server
-     */
     @Override
-    public void placeBet(String jwtToken, String email, int uid, int fixtureID, String betType, String selectedBet, double amount)
+    public int placeBet(String jwtToken, String email, int uid, int fixtureID, String betType, String selectedBet, double amount)
     throws BettingNotPossibleException, InvalidBetException, NotEnoughBalanceException, NotAuthorizedException, InternalServerError {
 
         // TODO authorize request
         // authService.authorizeRequest(jwtToken, uid, email);
 
-
-        System.out.println("Place bet");
 
         // Check if bet type is valid, get betID
         BetTypes selectedBetType = null;
@@ -114,46 +99,153 @@ public class BettingServiceImpl implements BettingService {
             throw new InternalServerError("Internal Server Error. Unable to get fixture");
         }
 
+        StringBuilder message = new StringBuilder();
+        message.append("Bet placed on fixture ")
+                .append(fixtureID).append(" with bet type ")
+                .append(betType).append(" and selected bet ")
+                .append(selectedBet);
+
         // Withdraw money from user
         try {
-            transactionService.withdrawMoneyInternal(uid, amount);
+            transactionService.withdrawMoneyInternal(uid, amount, message.toString());
         } catch (SQLException e) {
             throw new InternalServerError("Internal Server Error. Unable to withdraw");
         }
 
         // Place the bet
-        bettingDao.placeBet(fixtureID, uid, new BigDecimal(amount), betType, selectedBet, new BigDecimal(oddMultiplier));
+        return bettingDao.placeBet(fixtureID, uid, new BigDecimal(amount), betType, selectedBet, new BigDecimal(oddMultiplier));
 
     }
 
-    /**
-     * Claims all the bets that the user has won
-     *
-     * @param jwtToken The JWT token of the user claiming the bets
-     * @param email    The email of the user claiming the bets
-     * @param uid      The ID of the user claiming the bets
-     * @throws NotAuthorizedException The user is not authorized to claim the bets
-     * @throws InternalServerError    An error occurred in the server
-     */
     @Override
     public void claimBets(String jwtToken, String email, int uid) throws NotAuthorizedException, InternalServerError {
         // TODO authorize request
         // authService.authorizeRequest(jwtToken, uid, email);
 
-        // Get all the bets of the user
         try {
-            var bets = bettingDao.getBets(uid);
-
-            System.out.println("Bets:" + bets);
+            List<Map<String, Object>> bets = bettingDao.getBets(uid);
 
             for (var bet : bets) {
-                System.out.println(bet);
+
+                if(!Objects.equals((String) bet.get("status"), "PENDING")) break;
+
+                Integer betID;
+                Integer fixtureID;
+                String betType;
+                String selectedBet;
+                double betAmount;
+                double oddMultiplier;
+
+                try {
+                    betID = (Integer) bet.get("bet_id");
+                    fixtureID = (Integer) bet.get("fixtureid");
+                    betType = (String) bet.get("bet_type");
+                    selectedBet = (String) bet.get("selected_bet");
+                    betAmount = ((BigDecimal) bet.get("bet_amount")).doubleValue();
+                    oddMultiplier = ((BigDecimal) bet.get("odds")).doubleValue();
+                } catch (Exception e) {
+                    throw new InternalServerError("Extracting bet data failed");
+                }
+
+                Fixture fixture = fixtureService.getFixtureByID(fixtureID);
+
+                if (!Objects.equals(fixture.status(), "FT")) break;
+
+                if (betType.equals("WIN")) {
+
+                    StringBuilder message = new StringBuilder();
+                    message.append("Bet won on fixture ")
+                            .append(fixtureID).append(" with bet type ")
+                            .append(betType).append(" and selected bet ")
+                            .append(selectedBet);
+
+                    switch (selectedBet) {
+                        case "Home":
+                            if (fixture.homeGoals() > fixture.awayGoals()) {
+                                transactionService.addMoneyInternal(uid, betAmount * oddMultiplier, message.toString());
+                                bettingDao.changeStatus(betID, "WON");
+                            } else {
+                                bettingDao.changeStatus(betID, "LOST");
+                            }
+                            break;
+                        case "Away":
+                            if (fixture.awayGoals() > fixture.homeGoals()) {
+                                transactionService.addMoneyInternal(uid, betAmount * oddMultiplier, message.toString());
+                                bettingDao.changeStatus(betID, "WON");
+                            } else {
+                                bettingDao.changeStatus(betID, "LOST");
+                            }
+                            break;
+                        case "Draw":
+                            if (fixture.awayGoals() == fixture.homeGoals()) {
+                                transactionService.addMoneyInternal(uid, betAmount * oddMultiplier, message.toString());
+                                bettingDao.changeStatus(betID, "WON");
+                            } else {
+                                bettingDao.changeStatus(betID, "LOST");
+                            }
+                            break;
+                        default:
+                            throw new InternalServerError("Invalid selected bet");
+                    }
+
+                }
+
             }
         } catch (Exception e) {
-            throw new InternalServerError("Internal Server Error. Unable to claim bets");
+            throw new InternalServerError("Internal Server Error. Unable to claim bets " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void cancelBet(String jwtToken, String email, int uid, int betID) throws InternalServerError, NotAuthorizedException, BetTypeMismatchException {
+        // TODO authorize request
+        // authService.authorizeRequest(jwtToken, uid, email)
+
+        Map<String, Object> bet = bettingDao.getBet(betID);
+
+        if (bet == null) {
+            throw new InternalServerError("Bet not found");
+        }
+
+        if(!Objects.equals((String) bet.get("status"), "PENDING")) {
+            throw new BetTypeMismatchException("Bet is not pending");
+        }
+
+        try {
+            bettingDao.cancelBet(betID);
+            transactionService.addMoneyInternal(uid, ((BigDecimal) bet.get("bet_amount")).doubleValue(), "Bet cancelled");
+        } catch (InternalServerError e) {
+            throw new InternalServerError("Internal Server Error. Unable to delete bet");
+        } catch (SQLException e) {
+            throw new InternalServerError("Issue with transaction");
         }
     }
 
 
-}
+    @Override
+    public List<Map<String, Object>> getBets(String jwtToken, String email, int uid) throws InternalServerError, NotAuthorizedException {
+        // TODO authorize request
+        // authService.authorizeRequest(jwtToken, uid, email);
 
+        return bettingDao.getBets(uid);
+    }
+
+    @Override
+    public Map<String, Double> getStatistics(String jwtToken, String email, int uid) throws InternalServerError, NotAuthorizedException {
+        // TODO authorize request
+        // authService.authorizeRequest(jwtToken, uid, email);
+
+        Map<String, Double> stats = new HashMap<>();
+        System.out.println("Getting stats for " + uid);
+
+        stats.put("blocked", bettingDao.getBlockedAmount(uid));
+        System.out.println("Blocked: " + bettingDao.getBlockedAmount(uid));
+        stats.put("won", bettingDao.getWonAmount(uid));
+        System.out.println("Won: " + bettingDao.getWonAmount(uid));
+        stats.put("lost", bettingDao.getLostAmount(uid));
+        System.out.println("Lost: " + bettingDao.getLostAmount(uid));
+
+        return stats;
+    }
+
+}

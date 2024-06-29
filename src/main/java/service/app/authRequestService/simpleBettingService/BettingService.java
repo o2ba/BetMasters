@@ -3,8 +3,13 @@ package service.app.authRequestService.simpleBettingService;
 import common.exception.InternalServerError;
 import common.exception.NotAuthorizedException;
 import common.exception.transactions.NotEnoughBalanceException;
+import service.app.authRequestService.simpleBettingService.exceptions.BadRequestException;
+import service.app.authRequestService.simpleBettingService.exceptions.BetTypeMismatchException;
 import service.app.authRequestService.simpleBettingService.exceptions.BettingNotPossibleException;
 import service.app.authRequestService.simpleBettingService.exceptions.InvalidBetException;
+
+import java.util.List;
+import java.util.Map;
 
 public interface BettingService {
 
@@ -23,7 +28,7 @@ public interface BettingService {
      * @throws NotAuthorizedException The user is not authorized to place the bet
      * @throws InternalServerError An error occurred in the server
      */
-    void placeBet(String jwtToken, String email, int uid, int fixtureID, String betType, String selectedBet, double amount)
+    int placeBet(String jwtToken, String email, int uid, int fixtureID, String betType, String selectedBet, double amount)
     throws BettingNotPossibleException, InvalidBetException, NotEnoughBalanceException, NotAuthorizedException, InternalServerError;
 
 
@@ -37,6 +42,21 @@ public interface BettingService {
      * @throws InternalServerError An error occurred in the server
      */
     void claimBets(String jwtToken, String email, int uid)
-    throws NotAuthorizedException, InternalServerError, InvalidBetException;
+    throws NotAuthorizedException, InternalServerError, InvalidBetException, BadRequestException;
 
+
+    /**
+     * Delete / Cancel a bet
+     *
+     * @param jwtToken The JWT token of the user deleting the bet
+     * @param email The email of the user deleting the bet
+     * @param uid The ID of the user deleting the bet
+     * @param betID The ID of the bet to delete
+     * @throws NotAuthorizedException The user is not authorized to delete the bet
+     */
+    void cancelBet(String jwtToken, String email, int uid, int betID) throws InternalServerError, NotAuthorizedException, BetTypeMismatchException;
+
+    List<Map<String, Object>> getBets(String jwtToken, String email, int uid) throws InternalServerError, NotAuthorizedException;
+
+    Map<String, Double> getStatistics(String jwtToken, String email, int uid) throws InternalServerError, NotAuthorizedException;
 }

@@ -124,7 +124,7 @@ public class TransactionDaoImpl implements TransactionDao {
             }
             postgresRequest.executeUpdate(
                     TransactionQueries.ADD_INTERNAL.getQuery(),
-                    uid, -amount, message
+                    uid, amount, message
             );
         } catch (SQLException e) {
             throw new InternalServerError("An error occurred while processing the withdrawal");

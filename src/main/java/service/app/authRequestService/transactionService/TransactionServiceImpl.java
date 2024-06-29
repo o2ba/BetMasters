@@ -75,8 +75,8 @@ public class TransactionServiceImpl implements TransactionService {
      * @param amount
      */
     @Override
-    public void addMoneyInternal(int uid, double amount) throws SQLException, InternalServerError {
-        transactionDao.addMoneyInternal(uid, amount, "WIN");
+    public void addMoneyInternal(int uid, double amount, String message) throws SQLException, InternalServerError {
+        transactionDao.addMoneyInternal(uid, amount, message);
     }
 
     /**
@@ -86,13 +86,13 @@ public class TransactionServiceImpl implements TransactionService {
      * @param amount
      */
     @Override
-    public void withdrawMoneyInternal(int uid, double amount) throws SQLException, InternalServerError, NotEnoughBalanceException {
+    public void withdrawMoneyInternal(int uid, double amount, String message) throws SQLException, InternalServerError, NotEnoughBalanceException {
         // Check for sufficient balance
         double balance = transactionDao.getBalance(uid);
         if (balance < amount) {
             throw new NotEnoughBalanceException("Not enough balance");
         }
-        transactionDao.withdrawMoneyInternal(uid, amount, "BET");
+        transactionDao.withdrawMoneyInternal(uid, amount, message);
     }
 
     @Override

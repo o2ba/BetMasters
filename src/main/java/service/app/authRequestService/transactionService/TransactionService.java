@@ -20,10 +20,10 @@ public interface TransactionService {
     void transfer(String jwtToken, String email, int uid, int receiverID, double amount)
     throws NotAuthorizedException, SQLException, InternalServerError, NotEnoughBalanceException, InvalidRecipientException;
 
-    void addMoneyInternal(int uid, double amount)
+    void addMoneyInternal(int uid, double amount, String message)
     throws SQLException, InternalServerError;
 
-    void withdrawMoneyInternal(int uid, double amount)
+    void withdrawMoneyInternal(int uid, double amount, String message)
     throws SQLException, InternalServerError, NotEnoughBalanceException;
 
     JSONArray getTransactions(String jwtToken, String email, int uid)
