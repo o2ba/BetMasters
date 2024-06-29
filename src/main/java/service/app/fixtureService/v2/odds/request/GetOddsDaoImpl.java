@@ -1,5 +1,6 @@
 package service.app.fixtureService.v2.odds.request;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import dto.ApiRequest;
 import dto.httpRequest.exception.RequestSendingException;
@@ -55,6 +56,7 @@ public class GetOddsDaoImpl implements GetOddsDao {
 
         JsonElement response = apiRequest.sendRequest("odds", "GET", params);
 
+
         return new FootballResponse(response.getAsJsonObject().get("response").getAsJsonArray(),
                 response.getAsJsonObject().get("errors").getAsJsonArray(),
                 response.getAsJsonObject().get("results").getAsInt());
@@ -87,7 +89,23 @@ public class GetOddsDaoImpl implements GetOddsDao {
 
         JsonElement response = apiRequest.sendRequest("odds", "GET", params);
 
-        return new FootballResponse(response.getAsJsonObject().get("response").getAsJsonArray(),
+        // pagination
+        int totalPages = response.getAsJsonObject().get("paging").getAsJsonObject().get("total").getAsInt();
+        JsonArray odds = response.getAsJsonObject().get("response").getAsJsonArray();
+        System.out.println("Getting page 1");
+
+        if (totalPages > 1) {
+            for (int i = 2; i <= totalPages; i++) {
+                System.out.println("Getting page " + i);
+                params = Map.of("league", String.valueOf(leagueId), "season", String.valueOf(season),
+                        "bookmaker", bookmaker, "page", String.valueOf(i));
+                response = apiRequest.sendRequest("odds", "GET", params);
+
+                odds.addAll(response.getAsJsonObject().get("response").getAsJsonArray());
+            }
+        }
+
+        return new FootballResponse(odds,
                 response.getAsJsonObject().get("errors").getAsJsonArray(),
                 response.getAsJsonObject().get("results").getAsInt());
     }

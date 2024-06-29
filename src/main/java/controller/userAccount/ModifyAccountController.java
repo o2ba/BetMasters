@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import service.app.authRequestService.modifyAccount.ModifyAccount;
+import service.app.userService.modify.ModifyAccount;
 
 @RestController
 @Api(tags = "Modify Account")

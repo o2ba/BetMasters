@@ -2,17 +2,13 @@ package controller.transactions;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import common.exception.InternalServerError;
-import common.exception.NotAuthorizedException;
-import common.exception.register.ValidationException;
-import common.exception.transactions.NotEnoughBalanceException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import service.app.authRequestService.simpleBettingService.BettingService;
+import service.app.userService.betting.BettingService;
 import service.app.fixtureService.v2.odds.GetBetTypesService;
 
 @RestController

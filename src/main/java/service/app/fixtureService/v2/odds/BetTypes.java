@@ -39,6 +39,7 @@ public enum BetTypes {
         return id;
     }
 
+
     public List<String> getPossibleValues() {
         return possibleValues;
     }
