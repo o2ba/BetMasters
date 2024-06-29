@@ -1,6 +1,7 @@
 package common.security;
 
-import common.exception.register.ValidationException;
+
+import common.security.exception.ValidationException;
 
 public final class SensitiveData extends NonSensitiveData {
 

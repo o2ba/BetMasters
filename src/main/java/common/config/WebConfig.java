@@ -1,7 +1,6 @@
 package common.config;
 
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import service.general.springService.StringToSensitiveDataConverterUtil;
+import service.general.internal.springService.StringToSensitiveDataConverterUtil;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

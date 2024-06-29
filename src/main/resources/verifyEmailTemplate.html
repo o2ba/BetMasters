@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email Address</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 40px auto;
+            max-width: 600px;
+            padding: 20px;
+            width: 100%;
+        }
+        .header {
+            border-bottom: 2px solid #d34f00;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #d34f00;
+            margin: 0;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .content p {
+            color: #333333;
+            line-height: 1.6;
+        }
+        .content b {
+            color: #d34f00;
+            display: block;
+            margin: 10px 0;
+        }
+        .content a.btn {
+            background-color: #d34f00;
+            border-radius: 5px;
+            color: #ffffff;
+            display: inline-block;
+            padding: 10px 20px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .content a.btn:hover {
+            background-color: #b83d00;
+        }
+        .footer {
+            border-top: 1px solid #dddddd;
+            color: #999999;
+            font-size: 12px;
+            margin-top: 20px;
+            padding-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>BetMasters</h1>
+    </div>
+    <div class="content">
+        <p>Hey {{firstName}}!</p>
+        <p>Welcome to BetMasters, your new home for the ultimate football sports betting thrills! We're super excited to have you on board. To kick things off, we need to make sure it's really you. Click the button below to verify your email and unlock a world of exciting bets, amazing odds, and endless fun.</p>
+        <b>As a special bonus, we'll credit $100 to your account once you verify your email. That's right, $100 to get you started on your betting journey!</b>
+        <p>If you didn't sign up for BetMasters, no worries! Just ignore this email and you won't be bothered again.</p>
+
+        <p style="text-align: center;">
+            <a href="{{verificationLink}}" class="btn">Verify Email</a>
+        </p>
+        <p>If you did not create an account with us, please ignore this email.</p>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 BetMasters. Website for educational purposes only.</p>
+    </div>
+</div>
+</body>
+</html>
