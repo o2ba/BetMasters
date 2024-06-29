@@ -3,6 +3,8 @@ package service.app.authRequestService.simpleBettingService;
 import common.exception.InternalServerError;
 import common.exception.NotAuthorizedException;
 import common.exception.transactions.NotEnoughBalanceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import service.app.authRequestService.simpleBettingService.exceptions.BettingNot
 import service.app.authRequestService.simpleBettingService.exceptions.InvalidBetException;
 import service.app.authRequestService.transactionService.TransactionService;
 import service.app.fixtureService.v2.FixtureService;
+import service.app.fixtureService.v2.common.exception.FootballApiException;
 import service.app.fixtureService.v2.common.model.Fixture;
 import service.app.fixtureService.v2.odds.BetTypes;
 
@@ -28,6 +31,8 @@ public class BettingServiceImpl implements BettingService {
 
     @Value("${bookmaker}")
     private int bookmaker;
+
+    Logger logger = LoggerFactory.getLogger(BettingServiceImpl.class);
 
     BettingDao bettingDao;
     TransactionService transactionService;
@@ -78,7 +83,8 @@ public class BettingServiceImpl implements BettingService {
                 oddMultiplier = odds.get(selectedBet);
             }
         } catch (Exception e) {
-            throw new InternalServerError("Internal Server Error");
+            logger.warn("Error getting odds for fixture " + fixtureID);
+            throw new InternalServerError("Internal Server Error ");
         }
 
         // Check if amount is valid
@@ -91,11 +97,14 @@ public class BettingServiceImpl implements BettingService {
         // Get the fixture
         try {
             var fixture = fixtureService.getFixtureByID(fixtureID);
+
             // Check if the fixture has already started
-            if (fixture.bettingAllowed()) {
+            System.out.println(fixture.bettingAllowed());
+            if (!fixture.bettingAllowed()) {
                 throw new BettingNotPossibleException("Betting is not allowed for this fixture");
             }
-        } catch (Exception e) {
+        } catch (FootballApiException e) {
+            logger.error("Error getting fixture " + fixtureID + " " + e.getMessage()    );
             throw new InternalServerError("Internal Server Error. Unable to get fixture");
         }
 
