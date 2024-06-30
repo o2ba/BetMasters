@@ -5,16 +5,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import service.app.fixture.common.exception.FootballApiException;
+import service.app.fixture.common.model.FootballResponse;
 import service.app.fixture.leagues.request.GetLeaguesDao;
-import service.app.fixture.v2.common.exception.FootballApiException;
-import service.app.fixture.v2.common.model.FootballResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Service
-public class GetLeaguesServiceImpl implements service.app.fixture.v2.leagues.GetLeaguesService {
+public class GetLeaguesServiceImpl implements GetLeaguesService {
 
     private GetLeaguesDao getLeaguesDao;
 

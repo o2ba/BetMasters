@@ -1,4 +1,4 @@
-package service.app.user.account.register.db;
+package service.app.user.account.register.dao;
 
 import common.exception.UnhandledErrorException;
 import common.exception.gen.TimeoutException;
@@ -18,17 +18,17 @@ import java.util.Map;
 
 @Component
 @SuppressWarnings("all")
-final class RegisterServiceDbImpl implements RegisterServiceDb {
+final class RegisterServiceDaoImpl implements RegisterServiceDao {
 
     private final String ADD_USER = "INSERT INTO users (first_name, last_name, email, password, dob, created_at) " +
             "VALUES (?, ?, ?, ?, ?, ?) RETURNING uid";
 
-    private static final Logger logger = LoggerFactory.getLogger(RegisterServiceDbImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(RegisterServiceDaoImpl.class);
 
     DbRequest dbRequest;
 
     @Autowired
-    public RegisterServiceDbImpl(DbRequest dbRequest) {
+    public RegisterServiceDaoImpl(DbRequest dbRequest) {
         this.dbRequest = dbRequest;
     }
 

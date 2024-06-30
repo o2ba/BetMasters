@@ -3,8 +3,8 @@ package service.app.fixture.leagues.request;
 import com.google.gson.JsonElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import service.app.fixture.v2.common.exception.FootballApiException;
-import service.app.fixture.v2.common.model.FootballResponse;
+import service.app.fixture.common.exception.FootballApiException;
+import service.app.fixture.common.model.FootballResponse;
 import service.general.external.apiService.ApiRequest;
 
 import java.util.Map;

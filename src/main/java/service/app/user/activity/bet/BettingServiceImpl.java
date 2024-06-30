@@ -4,6 +4,8 @@ import common.exception.InternalServerError;
 import common.exception.NotAuthorizedException;
 import common.exception.UnhandledErrorException;
 import service.app.fixture.FixtureService;
+import service.app.fixture.common.model.Fixture;
+import service.app.fixture.odds.BetTypes;
 import service.app.user.activity.transact.TransactionType;
 import service.app.user.activity.transact.exception.InvalidTransactionException;
 import service.app.user.activity.transact.exception.InvalidUserException;
@@ -17,11 +19,9 @@ import service.app.user.activity.bet.exceptions.BettingNotPossibleException;
 import service.app.user.activity.transact.TransactionService;
 import service.general.internal.authService.AuthorizationService;
 import service.app.user.activity.bet.exceptions.InvalidBetException;
-import service.app.fixture.v2.common.model.Fixture;
-import service.app.fixture.v2.odds.BetTypes;
+
 
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,6 +113,10 @@ public class BettingServiceImpl implements BettingService {
         try {
             transactionService.withdrawMoney(uid, amount, TransactionType.INTERNAL);
         } catch (UnhandledErrorException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidTransactionException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidUserException e) {
             throw new RuntimeException(e);
         }
 
@@ -228,7 +232,6 @@ public class BettingServiceImpl implements BettingService {
             throw new RuntimeException(e);
         }
     }
-
 
     @Override
     public List<Map<String, Object>> getBets(String jwtToken, String email, int uid) throws InternalServerError, NotAuthorizedException {

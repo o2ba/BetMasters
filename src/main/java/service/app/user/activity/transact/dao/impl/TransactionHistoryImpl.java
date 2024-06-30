@@ -1,14 +1,15 @@
-package service.app.user.activity.transact.db.impl;
+package service.app.user.activity.transact.dao.impl;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import common.exception.UnhandledErrorException;
-import net.minidev.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import service.app.user.activity.transact.db.interfaces.TransactionHistory;
+import service.app.user.activity.transact.dao.interfaces.TransactionHistory;
 import service.general.external.dbRequest.DbRequest;
 
 import java.sql.SQLException;
@@ -17,6 +18,8 @@ import java.util.Map;
 
 @Component
 final class TransactionHistoryImpl implements TransactionHistory {
+
+    private final Gson gson = new Gson();
 
     private static final Logger logger = LoggerFactory.getLogger(TransactionHistoryImpl.class);
 
@@ -31,12 +34,12 @@ final class TransactionHistoryImpl implements TransactionHistory {
     }
 
     @Override
-    public JSONArray getTransactions(int uid) throws SQLException, UnhandledErrorException {
+    public JsonArray getTransactions(int uid) throws SQLException, UnhandledErrorException {
         try {
             List<Map<String, Object>> result = dbRequest.query(GET_TRANSACTIONS_QUERY, uid);
-            JSONArray transactions = new JSONArray();
+            JsonArray transactions = new JsonArray();
             for (Map<String, Object> row : result) {
-                JSONObject transaction = new JSONObject();
+                JsonObject transaction = new JsonObject();
                 safePut(transaction, "transaction_id", row.get("transaction_id"));
                 safePut(transaction, "uid", row.get("uid"));
                 safePut(transaction, "amount", row.get("amount"));
@@ -49,17 +52,22 @@ final class TransactionHistoryImpl implements TransactionHistory {
         } catch (SQLException e) {
             logger.error("Error occurred while retrieving transactions", e);
             throw e;
-        } catch (JSONException e) {
-            logger.error("Error occurred while creating JSON object", e);
-            throw new UnhandledErrorException("Error occurred while creating JSON object");
         }
     }
 
-    private void safePut(JSONObject jsonObject, String key, Object value) throws JSONException {
-        try {
-            jsonObject.put(key, value != null ? value : JSONObject.NULL);
-        } catch (Exception e) {
-            jsonObject.put(key, JSONObject.NULL);
+    private void safePut(JsonObject jsonObject, String key, Object value) {
+        if (value == null) {
+            jsonObject.add(key, JsonNull.INSTANCE);
+        } else if (value instanceof Number) {
+            jsonObject.addProperty(key, (Number) value);
+        } else if (value instanceof String) {
+            jsonObject.addProperty(key, (String) value);
+        } else if (value instanceof Boolean) {
+            jsonObject.addProperty(key, (Boolean) value);
+        } else if (value instanceof Character) {
+            jsonObject.addProperty(key, (Character) value);
+        } else {
+            jsonObject.add(key, gson.toJsonTree(value));
         }
     }
 }

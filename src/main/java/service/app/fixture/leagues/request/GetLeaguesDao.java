@@ -1,7 +1,8 @@
 package service.app.fixture.leagues.request;
 
-import service.app.fixture.v2.common.exception.FootballApiException;
-import service.app.fixture.v2.common.model.FootballResponse;
+
+import service.app.fixture.common.exception.FootballApiException;
+import service.app.fixture.common.model.FootballResponse;
 
 /**
  * Interface for getting leagues

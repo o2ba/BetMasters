@@ -1,4 +1,4 @@
-package service.app.fixture.v2.odds;
+package service.app.fixture.odds;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +36,6 @@ public enum BetTypes {
     public int getId() {
         return id;
     }
-
 
     public List<String> getPossibleValues() {
         return possibleValues;

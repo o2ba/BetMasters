@@ -8,8 +8,8 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import service.app.fixture.odds.GetBetTypesService;
 import service.app.user.activity.bet.BettingService;
-import service.app.fixture.v2.odds.GetBetTypesService;
 
 @RestController
 @Api(tags = "Betting")

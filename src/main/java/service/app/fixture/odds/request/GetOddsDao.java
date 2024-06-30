@@ -1,7 +1,7 @@
-package service.app.fixture.v2.odds.request;
+package service.app.fixture.odds.request;
 
-import service.app.fixture.v2.common.exception.RequestSendingException;
-import service.app.fixture.v2.common.model.FootballResponse;
+import service.app.fixture.common.exception.RequestSendingException;
+import service.app.fixture.common.model.FootballResponse;
 
 /**
  * Retrieve odds for a fixture

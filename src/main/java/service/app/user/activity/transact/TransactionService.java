@@ -1,9 +1,9 @@
 package service.app.user.activity.transact;
 
+import com.google.gson.JsonArray;
 import common.exception.UnhandledErrorException;
 import service.app.user.activity.transact.exception.InvalidUserException;
 import service.app.user.activity.transact.exception.NotEnoughBalanceException;
-import org.json.JSONArray;
 import service.app.user.activity.transact.exception.InvalidTransactionException;
 
 /**
@@ -50,7 +50,7 @@ public interface TransactionService {
      * @throws NotEnoughBalanceException  if the user does not have sufficient balance to complete the transaction.
      */
     int withdrawMoney(int uid, double amount, TransactionType type)
-            throws UnhandledErrorException, NotEnoughBalanceException;
+            throws UnhandledErrorException, NotEnoughBalanceException, InvalidTransactionException, InvalidUserException;
 
     /**
      * Removes a specified amount of money to a user's account, linked to a specific bet
@@ -72,18 +72,16 @@ public interface TransactionService {
      * @return A JSONArray containing the transaction history of the user.
      * @throws UnhandledErrorException if an unexpected error occurs while retrieving the transaction history.
      */
-    JSONArray getTransactions(int uid)
+    JsonArray getTransactions(int uid)
             throws UnhandledErrorException;
 
     /**
      * Retrieves the current balance of a user's account.
      *
-     * @param jwtToken The JWT token for authenticating the request.
-     * @param email    The email address of the user.
      * @param uid      The unique identifier of the user.
      * @return The current balance of the user's account.
      * @throws UnhandledErrorException if an unexpected error occurs while retrieving the balance.
      */
-    double getBalance(String jwtToken, String email, int uid)
-            throws UnhandledErrorException;
+    double getBalance(int uid)
+            throws UnhandledErrorException, InvalidUserException;
 }

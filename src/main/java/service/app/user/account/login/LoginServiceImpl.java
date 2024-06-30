@@ -10,7 +10,7 @@ import service.app.user.account.login.exception.LoginDeniedException;
 import common.security.SensitiveData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import service.app.user.account.login.db.LoginServiceDb;
+import service.app.user.account.login.dao.LoginServiceDao;
 import service.general.internal.authService.jwtTokenService.JwtTokenService;
 
 
@@ -22,12 +22,12 @@ public final class LoginServiceImpl implements LoginService {
     @Value("${jwt.token.lifetime}")
     private Long lifetime;
 
-    private final LoginServiceDb loginServiceDb;
+    private final LoginServiceDao loginServiceDao;
     private final JwtTokenService jwtTokenService;
 
     @Autowired
-    public LoginServiceImpl(LoginServiceDb loginServiceDb, JwtTokenService jwtTokenService) {
-        this.loginServiceDb = loginServiceDb;
+    public LoginServiceImpl(LoginServiceDao loginServiceDao, JwtTokenService jwtTokenService) {
+        this.loginServiceDao = loginServiceDao;
         this.jwtTokenService = jwtTokenService;
     }
 
@@ -35,7 +35,7 @@ public final class LoginServiceImpl implements LoginService {
     public LoginPayload login(String email, SensitiveData password)
             throws LoginDeniedException, UnhandledErrorException {
         try {
-            LoginServiceDb.LoginServiceDbReturn pw = loginServiceDb.getEncryptedPassword(email);
+            LoginServiceDao.LoginServiceDbReturn pw = loginServiceDao.getEncryptedPassword(email);
             EncryptedData storedPassword = pw.encryptedData();
             int uid = pw.uid();
 

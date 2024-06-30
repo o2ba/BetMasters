@@ -1,15 +1,15 @@
-package service.app.fixture.v2.fixture;
-
+package service.app.fixture.fixture;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import common.exception.InternalServerError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import service.app.fixture.v2.common.exception.NotFoundException;
-import service.app.fixture.v2.common.model.Fixture;
-import service.app.fixture.v2.common.model.FootballResponse;
-import service.app.fixture.v2.fixture.request.GetFixture;
+import service.app.fixture.common.exception.FixtureNotFoundException;
+import service.app.fixture.common.model.Fixture;
+import service.app.fixture.common.model.FootballResponse;
+import service.app.fixture.fixture.GetFixtureService;
+import service.app.fixture.fixture.request.GetFixture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +26,10 @@ public class GetFixtureServiceImpl implements GetFixtureService {
     }
 
     @Override
-    public Fixture getFixtureById(int fixture) throws InternalServerError, NotFoundException {
+    public Fixture getFixtureById(int fixture) throws InternalServerError, FixtureNotFoundException {
         try {
             FootballResponse footballResponse = getFixture.getFixtureById(fixture);
-            if (footballResponse.results() == 0) throw new NotFoundException("Fixture not found");
+            if (footballResponse.results() == 0) throw new FixtureNotFoundException("Fixture not found");
             JsonElement f =  footballResponse.response().get(0);
             return toFixtureObject(f);
         } catch (Exception e) {
@@ -42,7 +42,7 @@ public class GetFixtureServiceImpl implements GetFixtureService {
         try {
             FootballResponse footballResponse = getFixture.getFixturesByLeagueAndSeason(leagueId, season);
 
-            if (footballResponse.results() == 0) throw new NotFoundException("No fixtures found for this league and season");
+            if (footballResponse.results() == 0) throw new FixtureNotFoundException("No fixtures found for this league and season");
             List<Fixture> fixtures = new ArrayList<>();
             for (JsonElement f : footballResponse.response().getAsJsonArray()) {
                 fixtures.add(toFixtureObject(f));

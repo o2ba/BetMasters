@@ -6,7 +6,9 @@ public enum TransactionType {
     TRANSFER("transfer"),
     WIN("win"),
     LOSS("loss"),
-    INTERNAL("internal");
+    INTERNAL("internal"),
+    BET_PLACED("bet_placed"),
+    BET_WON("bet_won");
 
     private final String type;
 

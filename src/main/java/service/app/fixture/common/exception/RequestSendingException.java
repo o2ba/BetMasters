@@ -1,4 +1,4 @@
-package service.app.fixture.v2.common.exception;
+package service.app.fixture.common.exception;
 
 public class RequestSendingException extends Exception {
     public RequestSendingException(String message) {

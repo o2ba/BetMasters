@@ -1,12 +1,13 @@
-package service.app.fixture.v2.odds;
+package service.app.fixture.odds;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
-import service.app.fixture.v2.common.exception.NotFoundException;
-import service.app.fixture.v2.common.model.FootballResponse;
-import service.app.fixture.v2.odds.request.GetOddsDao;
+import service.app.fixture.common.exception.FixtureNotFoundException;
+import service.app.fixture.common.model.FootballResponse;
+import service.app.fixture.odds.request.GetOddsDao;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,7 +70,7 @@ public class GetOddsServiceImpl implements GetOddsService {
         FootballResponse footballResponse = getOdds.getOddsForLeagueAndSeason(leagueId, season, oddID);
 
         if (footballResponse == null || footballResponse.results() == 0) {
-            throw new NotFoundException("No odds found for this league and season");
+            throw new FixtureNotFoundException("No odds found for this league and season");
         }
 
         Map<Integer, Map<String, Double>> oddsMap = new HashMap<>();

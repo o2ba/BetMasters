@@ -1,4 +1,4 @@
-package service.app.fixture.v2.odds;
+package service.app.fixture.odds;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

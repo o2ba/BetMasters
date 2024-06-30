@@ -1,8 +1,8 @@
 package service.app.fixture;
 
 import common.exception.InternalServerError;
-import service.app.fixture.v2.common.exception.FootballApiException;
-import service.app.fixture.v2.common.model.Fixture;
+import service.app.fixture.common.exception.FootballApiException;
+import service.app.fixture.common.model.Fixture;
 
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package service.app.user.account.login.db;
+package service.app.user.account.login.dao;
 
 import common.exception.UnhandledErrorException;
 import common.security.EncryptedData;
@@ -9,7 +9,7 @@ import service.app.user.account.login.exception.LoginDeniedException;
  * Implementations of this interface provide methods to verify if the provided
  * email address and sensitive password match stored credentials.
  */
-public interface LoginServiceDb {
+public interface LoginServiceDao {
 
     /** A record containing the encrypted password and user ID upon successful verification */
     record LoginServiceDbReturn (EncryptedData encryptedData, int uid) {}

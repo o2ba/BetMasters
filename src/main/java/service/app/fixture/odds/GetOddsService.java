@@ -1,5 +1,4 @@
-package service.app.fixture.v2.odds;
-
+package service.app.fixture.odds;
 
 import java.util.Map;
 

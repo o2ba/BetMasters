@@ -1,13 +1,14 @@
-package service.app.fixture.v2.odds.request;
+package service.app.fixture.odds.request;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import service.app.fixture.v2.common.exception.RequestSendingException;
+import service.app.fixture.common.exception.RequestSendingException;
+import service.app.fixture.common.model.FootballResponse;
+import service.app.fixture.odds.request.GetOddsDao;
 import service.general.external.apiService.ApiRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import service.app.fixture.v2.common.model.FootballResponse;
 
 import java.util.Map;
 

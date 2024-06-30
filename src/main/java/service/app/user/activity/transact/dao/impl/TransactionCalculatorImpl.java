@@ -1,13 +1,14 @@
-package service.app.user.activity.transact.db.impl;
+package service.app.user.activity.transact.dao.impl;
 
 import common.exception.UnhandledErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import service.app.user.activity.transact.db.interfaces.TransactionCalculator;
+import service.app.user.activity.transact.dao.interfaces.TransactionCalculator;
 import service.general.external.dbRequest.DbRequest;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -27,17 +28,12 @@ final class TransactionCalculatorImpl implements TransactionCalculator {
     }
 
     @Override
-    public double getBalance(int uid) throws SQLException {
-        try {
-            List<Map<String, Object>> result = dbRequest.query(GET_BALANCE_QUERY, uid);
-            if (result.isEmpty()) {
-                return 0.0;
-            } else {
-                return (double) result.get(0).get("balance");
-            }
-        } catch (SQLException e) {
-            logger.error("Error occurred while retrieving balance", e);
-            throw e;
+    public double getBalance(int uid) throws SQLException, UnhandledErrorException {
+        List<Map<String, Object>> result = dbRequest.query(GET_BALANCE_QUERY, uid);
+        if (result.get(0).get("balance") == null) return 0;
+        if (result.isEmpty()) {
+            throw new UnhandledErrorException("Failed to retrieve balance");
         }
+        return ((BigDecimal) result.get(0).get("balance")).doubleValue();
     }
 }

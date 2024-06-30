@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import service.app.fixture.FixtureService;
-import service.app.fixture.v2.common.exception.FootballApiException;
+import service.app.fixture.common.exception.FootballApiException;
+import service.app.fixture.common.model.Fixture;
 
 
 import java.util.List;
@@ -86,11 +87,11 @@ public class FixtureBetsController {
             @ApiParam(value = "Fixture ID", required = true) @RequestParam("fixtureID") int fixtureID
     ) {
         try {
-            service.app.fixture.v2.common.model.Fixture fixture = fixtureService.getFixtureByID(fixtureID);
+            Fixture fixture = fixtureService.getFixtureByID(fixtureID);
             return ResponseEntity.status(200).body(fixture.toJson());
         } catch (InternalServerError e) {
             return ResponseEntity.status(500).body("Fixture not found");
-        } catch (service.app.fixture.v2.common.exception.FootballApiException e) {
+        } catch (FootballApiException e) {
             throw new RuntimeException(e);
         }
     }
@@ -103,11 +104,11 @@ public class FixtureBetsController {
     ) {
         try {
 
-            List<service.app.fixture.v2.common.model.Fixture> fixtures = fixtureService.getFixturesByLeagueAndSeason(leagueID, seasonID);
+            List<Fixture> fixtures = fixtureService.getFixturesByLeagueAndSeason(leagueID, seasonID);
 
             JsonArray jsonArray = new JsonArray();
 
-            for (service.app.fixture.v2.common.model.Fixture fixture : fixtures) {
+            for (Fixture fixture : fixtures) {
                 jsonArray.add(fixture.toJsonElement());
             }
 

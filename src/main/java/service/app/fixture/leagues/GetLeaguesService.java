@@ -1,7 +1,6 @@
-package service.app.fixture.v2.leagues;
+package service.app.fixture.leagues;
 
-
-import service.app.fixture.v2.common.exception.FootballApiException;
+import service.app.fixture.common.exception.FootballApiException;
 
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package service.app.user.account.register.db;
+package service.app.user.account.register.dao;
 
 import common.exception.UnhandledErrorException;
 import common.exception.gen.TimeoutException;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Component
-public interface RegisterServiceDb {
+public interface RegisterServiceDao {
 
     /**
      * Adds a user to the database

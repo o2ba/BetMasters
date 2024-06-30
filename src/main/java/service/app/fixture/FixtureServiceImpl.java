@@ -4,12 +4,13 @@ import common.exception.InternalServerError;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import service.app.fixture.v2.common.exception.FootballApiException;
-import service.app.fixture.v2.common.model.Fixture;
-import service.app.fixture.v2.fixture.GetFixtureService;
-import service.app.fixture.v2.leagues.GetLeaguesService;
-import service.app.fixture.v2.odds.GetBetTypesService;
-import service.app.fixture.v2.odds.GetOddsService;
+import service.app.fixture.common.exception.FootballApiException;
+import service.app.fixture.common.model.Fixture;
+import service.app.fixture.fixture.GetFixtureService;
+import service.app.fixture.leagues.GetLeaguesService;
+import service.app.fixture.odds.GetBetTypesService;
+import service.app.fixture.odds.GetOddsService;
+
 
 import java.util.List;
 import java.util.Map;

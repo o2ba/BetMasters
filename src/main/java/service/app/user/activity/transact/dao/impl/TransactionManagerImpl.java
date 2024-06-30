@@ -1,4 +1,4 @@
-package service.app.user.activity.transact.db.impl;
+package service.app.user.activity.transact.dao.impl;
 
 import common.exception.UnhandledErrorException;
 import org.slf4j.Logger;
@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import service.app.user.activity.transact.TransactionType;
-import service.app.user.activity.transact.db.interfaces.TransactionManager;
+import service.app.user.activity.transact.dao.interfaces.TransactionManager;
 import service.general.external.dbRequest.DbRequest;
 
 import java.sql.SQLException;

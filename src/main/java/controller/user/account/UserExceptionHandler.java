@@ -1,6 +1,7 @@
 package controller.user.account;
 
 import common.exception.UnhandledErrorException;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,7 +13,7 @@ import service.app.user.account.register.exception.InvalidInputException;
 
 
 @RestControllerAdvice
-@Ord
+@Order(2)
 public class UserExceptionHandler {
     @ExceptionHandler(value = LoginDeniedException.class)
     public ResponseEntity<String> handleLoginDeniedException(LoginDeniedException e) {

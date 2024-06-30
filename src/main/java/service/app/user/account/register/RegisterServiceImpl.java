@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import service.general.internal.authService.jwtTokenService.JwtTokenService;
-import service.app.user.account.register.db.RegisterServiceDb;
+import service.app.user.account.register.dao.RegisterServiceDao;
 import service.app.user.account.register.exception.InvalidAgeException;
 import service.app.user.account.register.exception.InvalidInputException;
 import service.general.internal.validation.Validation;
@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 public final class RegisterServiceImpl implements RegisterService {
 
     private final JwtTokenService jwtTokenService;
-    private final RegisterServiceDb registerServiceDb;
+    private final RegisterServiceDao registerServiceDao;
     private final Validation validation;
 
     // Logger
@@ -36,9 +36,9 @@ public final class RegisterServiceImpl implements RegisterService {
     private int minimumAge;
 
     @Autowired
-    public RegisterServiceImpl(JwtTokenService jwtTokenService, RegisterServiceDb registerServiceDb, Validation validation) {
+    public RegisterServiceImpl(JwtTokenService jwtTokenService, RegisterServiceDao registerServiceDao, Validation validation) {
         this.jwtTokenService = jwtTokenService;
-        this.registerServiceDb = registerServiceDb;
+        this.registerServiceDao = registerServiceDao;
         this.validation = validation;
     }
 
@@ -53,7 +53,7 @@ public final class RegisterServiceImpl implements RegisterService {
         checkValidAge(dob);
 
         /* Add user to the database */
-        int uid = registerServiceDb.addUser(firstName, lastName, email, password, dob, LocalDateTime.now());
+        int uid = registerServiceDao.addUser(firstName, lastName, email, password, dob, LocalDateTime.now());
 
         /* Generate JWT token */
         String newJwtToken = generateJwtToken(email, uid);

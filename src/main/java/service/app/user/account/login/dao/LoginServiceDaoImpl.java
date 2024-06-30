@@ -1,4 +1,4 @@
-package service.app.user.account.login.db;
+package service.app.user.account.login.dao;
 
 import common.exception.UnhandledErrorException;
 import common.security.EncryptedData;
@@ -14,16 +14,16 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-final class LoginServiceDbImpl implements LoginServiceDb {
+final class LoginServiceDaoImpl implements LoginServiceDao {
 
     private final String RETRIEVE_HASHED_PASSWORD = "SELECT password, uid FROM users WHERE email = ?";
 
-    Logger logger = LoggerFactory.getLogger(LoginServiceDbImpl.class);
+    Logger logger = LoggerFactory.getLogger(LoginServiceDaoImpl.class);
 
     DbRequest dbRequest;
 
     @Autowired
-    public LoginServiceDbImpl(DbRequest dbRequest) {
+    public LoginServiceDaoImpl(DbRequest dbRequest) {
         this.dbRequest = dbRequest;
     }
 
