@@ -1,6 +1,8 @@
 package controller.user.transaction;
 
 import com.google.gson.GsonBuilder;
+import common.exception.InternalServerError;
+import common.exception.NotAuthorizedException;
 import common.exception.UnhandledErrorException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -18,6 +20,7 @@ import service.app.user.activity.transact.TransactionType;
 import service.app.user.activity.transact.exception.InvalidTransactionException;
 import service.app.user.activity.transact.exception.InvalidUserException;
 import service.app.user.activity.transact.exception.NotEnoughBalanceException;
+import service.general.internal.authService.AuthorizationService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,13 +30,15 @@ import java.util.Map;
 public class TransactionController {
 
     TransactionService transactionService;
+    AuthorizationService authorizationService;
 
     Logger logger = LoggerFactory.getLogger(TransactionController.class);
 
 
     @Autowired
-    public TransactionController(TransactionService transactionService) {
+    public TransactionController(TransactionService transactionService, AuthorizationService authorizationService) {
         this.transactionService = transactionService;
+        this.authorizationService = authorizationService;
     }
 
     @PostMapping("/transaction/deposit")
@@ -42,8 +47,9 @@ public class TransactionController {
             @ApiParam(value = "User ID", required = true) @RequestParam int userId,
             @ApiParam(value = "JWT token" , required = true) @RequestParam String jwtToken,
             @ApiParam(value = "email", required = true) @RequestParam String email
-    ) throws UnhandledErrorException, InvalidTransactionException, InvalidUserException {
+    ) throws UnhandledErrorException, InvalidTransactionException, InvalidUserException, NotAuthorizedException, InternalServerError {
 
+        authorizationService.authorizeRequest(jwtToken, userId, email);
 
         int t_id = transactionService.addMoney(userId, amount, TransactionType.DEPOSIT);
 
@@ -73,7 +79,9 @@ public class TransactionController {
             @ApiParam(value = "User ID", required = true) @RequestParam int userId,
             @ApiParam(value = "JWT token" , required = true) @RequestParam String jwtToken,
             @ApiParam(value = "email", required = true) @RequestParam String email
-    ) throws UnhandledErrorException, InvalidTransactionException, InvalidUserException, NotEnoughBalanceException {
+    ) throws UnhandledErrorException, InvalidTransactionException, InvalidUserException, NotEnoughBalanceException, NotAuthorizedException, InternalServerError {
+
+        authorizationService.authorizeRequest(jwtToken, userId, email);
 
         int t_id = transactionService.withdrawMoney(userId, amount, TransactionType.WITHDRAWAL);
 
@@ -100,7 +108,9 @@ public class TransactionController {
             @ApiParam(value = "User ID", required = true) @RequestParam int userId,
             @ApiParam(value = "JWT token" , required = true) @RequestParam String jwtToken,
             @ApiParam(value = "email", required = true) @RequestParam String email
-    ) throws UnhandledErrorException, InvalidUserException {
+    ) throws UnhandledErrorException, InvalidUserException, NotAuthorizedException, InternalServerError {
+
+        authorizationService.authorizeRequest(jwtToken, userId, email);
 
         Map<String, Object> response = new HashMap<>();
 
@@ -117,7 +127,9 @@ public class TransactionController {
             @ApiParam(value = "User ID", required = true) @RequestParam int userId,
             @ApiParam(value = "JWT token" , required = true) @RequestParam String jwtToken,
             @ApiParam(value = "email", required = true) @RequestParam String email
-    ) throws UnhandledErrorException {
+    ) throws UnhandledErrorException, NotAuthorizedException, InternalServerError {
+
+        authorizationService.authorizeRequest(jwtToken, userId, email);
 
         GsonBuilder gsonBuilder = new GsonBuilder().setPrettyPrinting();
         String json = gsonBuilder.create().toJson(transactionService.getTransactions(userId));

@@ -16,7 +16,7 @@ import java.util.Map;
 @Service
 public class GetLeaguesServiceImpl implements GetLeaguesService {
 
-    private GetLeaguesDao getLeaguesDao;
+    private final GetLeaguesDao getLeaguesDao;
 
     @Autowired
     public GetLeaguesServiceImpl(GetLeaguesDao getLeaguesDao) {
@@ -33,7 +33,6 @@ public class GetLeaguesServiceImpl implements GetLeaguesService {
 
             JsonArray leaguesArray = leagues.response().getAsJsonArray();
 
-            System.out.println(leagues.errors());
 
             for (int i = 0; i < leaguesArray.size(); i++) {
                 JsonObject leagueObject = leaguesArray.get(i).getAsJsonObject();

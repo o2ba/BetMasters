@@ -8,14 +8,14 @@ import service.app.user.activity.transact.exception.InvalidTransactionException;
 
 /**
  * The TransactionService interface provides methods for handling various
- * types of financial transactions for a user account. This includes adding money,
+ * types of financial transactions for a user authentication. This includes adding money,
  * withdrawing money, transferring funds between users, and retrieving transaction history
  * and balance information.
  */
 public interface TransactionService {
 
     /**
-     * Adds a specified amount of money to a user's account.
+     * Adds a specified amount of money to a user's authentication.
      *
      * @param uid     The unique identifier of the user.
      * @param amount  The amount of money to be added.
@@ -27,7 +27,7 @@ public interface TransactionService {
             throws UnhandledErrorException, InvalidTransactionException, InvalidUserException;
 
     /**
-     * Adds a specified amount of money to a user's account, linked to a specific bet
+     * Adds a specified amount of money to a user's authentication, linked to a specific bet
      *
      * @param uid     The unique identifier of the user.
      * @param amount  The amount of money to be added.
@@ -40,7 +40,7 @@ public interface TransactionService {
             throws UnhandledErrorException;
 
     /**
-     * Withdraws a specified amount of money from a user's account.
+     * Withdraws a specified amount of money from a user's authentication.
      *
      * @param uid     The unique identifier of the user.
      * @param amount  The amount of money to be withdrawn.
@@ -53,7 +53,7 @@ public interface TransactionService {
             throws UnhandledErrorException, NotEnoughBalanceException, InvalidTransactionException, InvalidUserException;
 
     /**
-     * Removes a specified amount of money to a user's account, linked to a specific bet
+     * Removes a specified amount of money to a user's authentication, linked to a specific bet
      *
      * @param uid     The unique identifier of the user.
      * @param amount  The amount of money to be added.
@@ -76,10 +76,10 @@ public interface TransactionService {
             throws UnhandledErrorException;
 
     /**
-     * Retrieves the current balance of a user's account.
+     * Retrieves the current balance of a user's authentication.
      *
      * @param uid      The unique identifier of the user.
-     * @return The current balance of the user's account.
+     * @return The current balance of the user's authentication.
      * @throws UnhandledErrorException if an unexpected error occurs while retrieving the balance.
      */
     double getBalance(int uid)

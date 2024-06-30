@@ -21,7 +21,6 @@ public class GetLeaguesDaoImpl implements GetLeaguesDao {
         this.apiRequest = apiRequest;
     }
 
-    private String apiKey = System.getenv("API_KEY");
 
     /**
      * Get all leagues by country code
