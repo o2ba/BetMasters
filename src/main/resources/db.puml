@@ -1,0 +1,57 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class bets {
+   uid: integer
+   fixture_id: integer
+   bet_amount: numeric(10,2)
+   bet_type: varchar(255)
+   selected_bet: varchar(255)
+   win_multiplier: numeric(10,2)
+   status: varchar(255)
+   timestamp: timestamp
+   bet_id: integer
+}
+class email_verifications {
+   uid: integer
+   email: varchar(255)
+   token: varchar(255)
+   expires_at: timestamp
+   verified: boolean
+   created_at: timestamp
+   verification_id: integer
+}
+class transaction_types {
+   type: varchar(255)
+   id: integer
+}
+class transactions {
+   uid: integer
+   amount: numeric(10,2)
+   transaction_type: integer
+   transaction_sign: char
+   transaction_date: timestamp
+   bet_id: integer
+   transaction_id: integer
+}
+class users {
+   email: varchar(254)
+   password: varchar(320)
+   email_verified: boolean
+   id_verified: boolean
+   created_at: date
+   dob: date
+   first_name: varchar(255)
+   last_name: varchar(255)
+   uid: integer
+}
+
+bets                 -[#595959,plain]-^  users               : "uid"
+email_verifications  -[#595959,plain]-^  users               : "uid"
+transactions         -[#595959,plain]-^  bets                : "bet_id"
+transactions         -[#595959,plain]-^  transaction_types   : "transaction_type:id"
+transactions         -[#595959,plain]-^  users               : "uid"
+@enduml
