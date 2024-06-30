@@ -6,7 +6,7 @@ import service.app.user.activity.transact.TransactionType;
 import java.sql.SQLException;
 
 /**
- * The TransactionManager interface provides a contract for managing transactions in a user's account.
+ * The TransactionManager interface provides a contract for managing transactions in a user's authentication.
  * Implementations of this interface are expected to provide concrete implementations of the addTransaction and addTransactionWithBet methods.
  *
  * <p>This interface is a part of the service layer in the application architecture,
@@ -22,7 +22,7 @@ import java.sql.SQLException;
 public interface TransactionManager {
 
     /**
-     * Adds a new transaction to a user's account based on the user's ID, the amount, and the transaction type.
+     * Adds a new transaction to a user's authentication based on the user's ID, the amount, and the transaction type.
      *
      * <p>This method interacts with the database to add a new transaction.
      * It is expected to handle SQL exceptions and other unhandled exceptions that might occur during the execution.</p>
@@ -38,7 +38,7 @@ public interface TransactionManager {
             throws SQLException, UnhandledErrorException;
 
     /**
-     * Adds a new transaction with a bet to a user's account based on the user's ID, the amount, the transaction type, and the bet ID.
+     * Adds a new transaction with a bet to a user's authentication based on the user's ID, the amount, the transaction type, and the bet ID.
      *
      * <p>This method interacts with the database to add a new transaction with a bet.
      * It is expected to handle SQL exceptions and other unhandled exceptions that might occur during the execution.</p>

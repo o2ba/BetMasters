@@ -5,7 +5,7 @@ import common.exception.UnhandledErrorException;
 import java.sql.SQLException;
 
 /**
- * The TransactionCalculator interface provides a contract for calculating the balance of a user's account.
+ * The TransactionCalculator interface provides a contract for calculating the balance of a user's authentication.
  * Implementations of this interface are expected to provide a concrete implementation of the getBalance method.
  *
  * <p>This interface is a part of the service layer in the application architecture,
@@ -21,13 +21,13 @@ import java.sql.SQLException;
 public interface TransactionCalculator {
 
     /**
-     * Calculates and returns the balance of a user's account based on the user's ID.
+     * Calculates and returns the balance of a user's authentication based on the user's ID.
      *
      * <p>This method interacts with the database to fetch the necessary data for its calculations.
      * It is expected to handle SQL exceptions and other unhandled exceptions that might occur during the execution.</p>
      *
      * @param uid the ID of the user whose balance is to be calculated
-     * @return the balance of the user's account
+     * @return the balance of the user's authentication
      * @throws SQLException if a database access error occurs or this method is called on a closed connection
      * @throws UnhandledErrorException if an unexpected error occurs during the execution of the method
      */

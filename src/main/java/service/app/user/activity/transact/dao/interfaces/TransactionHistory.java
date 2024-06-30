@@ -22,7 +22,7 @@ import java.sql.SQLException;
 public interface TransactionHistory {
 
     /**
-     * Fetches and returns the transactions of a user's account based on the user's ID.
+     * Fetches and returns the transactions of a user's authentication based on the user's ID.
      *
      * <p>This method interacts with the database to fetch the necessary data.
      * It is expected to handle SQL exceptions and other unhandled exceptions that might occur during the execution.</p>

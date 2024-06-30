@@ -17,7 +17,7 @@ import java.sql.SQLException;
 
 /**
  * The TransactionServiceImpl class implements the TransactionService interface,
- * providing methods for handling various types of financial transactions for a user account.
+ * providing methods for handling various types of financial transactions for a user authentication.
  */
 @Service
 public class TransactionServiceImpl implements TransactionService {

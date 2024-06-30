@@ -20,7 +20,7 @@ public interface LoginService {
      * @param username the username of the user attempting to log in
      * @param password the sensitive password data of the user
      * @return a {@link LoginPayload} containing necessary login information upon successful authentication
-     * @throws LoginDeniedException   if the login attempt is denied due to invalid credentials, account status, or other policies
+     * @throws LoginDeniedException   if the login attempt is denied due to invalid credentials, authentication status, or other policies
      * @throws UnhandledErrorException if an unexpected error occurs during the login process
      */
     LoginPayload login(String username, SensitiveData password)

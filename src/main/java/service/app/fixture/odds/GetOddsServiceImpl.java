@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-// TODO PAGINATION
 /**
  * Gets the odds of a fixture.
  */
@@ -104,7 +103,6 @@ public class GetOddsServiceImpl implements GetOddsService {
 
         }
 
-        System.out.println(oddsMap);
 
         return oddsMap;
     }

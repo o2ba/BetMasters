@@ -62,8 +62,6 @@ public class GetFixtureServiceImpl implements GetFixtureService {
         JsonObject scoreObj = f.getAsJsonObject().get("score").getAsJsonObject();
         JsonObject penaltyObj = scoreObj.has("penalty") && !scoreObj.get("penalty").isJsonNull() ? scoreObj.getAsJsonObject("penalty") : null;
 
-        System.out.println("penaltyObj: " + penaltyObj);
-
         try {
             return new Fixture(
                     Optional.ofNullable(leagueObj.get("name")).map(JsonElement::getAsString).orElse(null),

@@ -25,7 +25,6 @@ public class GetOddsDaoImpl implements GetOddsDao {
     @Value("${bookmaker}")
     private int bookmaker;
 
-    private String apiKey = System.getenv("API_KEY");
 
     /**
      * Retrieve odds for a fixture. Uses the default bookmaker
@@ -37,7 +36,6 @@ public class GetOddsDaoImpl implements GetOddsDao {
     @Override
     public FootballResponse getOdds(int fixtureId, int oddID) throws RequestSendingException {
 
-        System.out.println();
 
         return getOdds(fixtureId, oddID, String.valueOf(bookmaker));
     }
@@ -93,11 +91,9 @@ public class GetOddsDaoImpl implements GetOddsDao {
         // pagination
         int totalPages = response.getAsJsonObject().get("paging").getAsJsonObject().get("total").getAsInt();
         JsonArray odds = response.getAsJsonObject().get("response").getAsJsonArray();
-        System.out.println("Getting page 1");
 
         if (totalPages > 1) {
             for (int i = 2; i <= totalPages; i++) {
-                System.out.println("Getting page " + i);
                 params = Map.of("league", String.valueOf(leagueId), "season", String.valueOf(season),
                         "bookmaker", bookmaker, "page", String.valueOf(i));
                 response = apiRequest.sendRequest("odds", "GET", params);

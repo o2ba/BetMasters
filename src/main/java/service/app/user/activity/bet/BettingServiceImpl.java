@@ -1,262 +1,185 @@
 package service.app.user.activity.bet;
 
 import common.exception.InternalServerError;
-import common.exception.NotAuthorizedException;
 import common.exception.UnhandledErrorException;
+import common.exception.gen.UserNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import service.app.fixture.FixtureService;
+import service.app.fixture.common.exception.FixtureNotFoundException;
 import service.app.fixture.common.model.Fixture;
-import service.app.fixture.odds.BetTypes;
+import service.app.user.activity.bet.dao.inferfaces.BetEditor;
+import service.app.user.activity.bet.dao.inferfaces.BetPlacer;
+import service.app.user.activity.bet.dao.inferfaces.BetRetriever;
+import service.app.user.activity.bet.exception.BettingNotOpenException;
+import service.app.user.activity.bet.exception.InvalidInputException;
+import service.app.user.activity.bet.exception.NoOddsForGameException;
+import service.app.user.activity.bet.exception.StatusAlreadyIdentical;
+import service.app.user.activity.bet.helper.BetHelper;
+import service.app.user.activity.bet.helper.FixtureValidator;
+import service.app.user.activity.transact.TransactionService;
 import service.app.user.activity.transact.TransactionType;
 import service.app.user.activity.transact.exception.InvalidTransactionException;
 import service.app.user.activity.transact.exception.InvalidUserException;
 import service.app.user.activity.transact.exception.NotEnoughBalanceException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import service.app.user.activity.bet.dao.BettingDao;
-import service.app.user.activity.bet.exceptions.BetTypeMismatchException;
-import service.app.user.activity.bet.exceptions.BettingNotPossibleException;
-import service.app.user.activity.transact.TransactionService;
-import service.general.internal.authService.AuthorizationService;
-import service.app.user.activity.bet.exceptions.InvalidBetException;
-
 
 import java.math.BigDecimal;
-import java.util.HashMap;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class BettingServiceImpl implements BettingService {
 
-    @Value("${bookmaker}")
-    private int bookmaker;
-
-    BettingDao bettingDao;
-    TransactionService transactionService;
-    FixtureService fixtureService;
-    AuthorizationService authService;
+    private final BetPlacer betPlacer;
+    private final BetEditor betEditor;
+    private final BetRetriever betRetriever;
+    private final BetHelper betHelper;
+    private final TransactionService transactionService;
+    private final FixtureValidator fixtureValidator;
+    private final FixtureService fixtureService;
 
     @Autowired
-    public BettingServiceImpl(AuthorizationService authService, BettingDao bettingDao, TransactionService transactionService, FixtureService fixtureService) {
-        this.authService = authService;
-        this.bettingDao = bettingDao;
+    public BettingServiceImpl(BetPlacer betPlacer,
+                              BetEditor betEditor,
+                              BetRetriever betRetriever,
+                              BetHelper betHelper,
+                              TransactionService transactionService,
+                              FixtureValidator fixtureValidator,
+                              FixtureService fixtureService) {
+        this.betPlacer = betPlacer;
+        this.betEditor = betEditor;
+        this.betRetriever = betRetriever;
+        this.betHelper = betHelper;
         this.transactionService = transactionService;
+        this.fixtureValidator = fixtureValidator;
         this.fixtureService = fixtureService;
     }
 
     @Override
-    public int placeBet(String jwtToken, String email, int uid, int fixtureID, String betType, String selectedBet, double amount)
-    throws BettingNotPossibleException, InvalidBetException, NotEnoughBalanceException, NotAuthorizedException, InternalServerError {
-
-        // TODO authorize request
-        // authService.authorizeRequest(jwtToken, uid, email);
-
-
-        // Check if bet type is valid, get betID
-        BetTypes selectedBetType = null;
-        for (BetTypes bet : BetTypes.values()) {
-            if (bet.getShortName().equals(betType)) {
-                selectedBetType = bet;
-                break;
-            }
-        }
-
-        if (selectedBetType == null) {
-            throw new InvalidBetException("Invalid bet type");
-        }
-
-        // The multiplier of winning amount
-        Double oddMultiplier;
-
-        // Get the odds for the fixture
+    public int placeBet(int uid, double amount, int fixtureId, String betType, String prediction)
+            throws UnhandledErrorException,
+            BettingNotOpenException,
+            NoOddsForGameException,
+            InvalidUserException,
+            NotEnoughBalanceException,
+            FixtureNotFoundException,
+            InvalidInputException {
         try {
-            var odds = fixtureService.getOddsForFixture(fixtureID, selectedBetType.getId());
 
-            System.out.println("Odds: " + odds);
-            // check if selected bet is valid
-            if (!odds.containsKey(selectedBet)) {
-                throw new InvalidBetException("Invalid bet. Valid bets are: " + selectedBetType.getPossibleValues());
-            } else {
-                oddMultiplier = odds.get(selectedBet);
-            }
-        } catch (Exception e) {
-            throw new InternalServerError("Internal Server Error");
+            if (!fixtureValidator.bettingOpenForFixture(fixtureId))
+                throw new BettingNotOpenException("Betting is not open for the fixture");
+
+            double oddMultiplier = betHelper.getOddsMultiplier(fixtureId, betType, prediction);
+            transactionService.withdrawMoney(uid, amount, TransactionType.BET_PLACED);
+            return betPlacer.placeBet(uid, amount, fixtureId, betType, prediction, oddMultiplier);
+
+        } catch (SQLException | InvalidTransactionException e) {
+            throw new UnhandledErrorException(e);
         }
-
-        // Check if amount is valid
-
-        if (amount <= 0) {
-            throw new InvalidBetException("Amount must be greater than 0");
-        }
-
-
-        // Get the fixture
-        try {
-            var fixture = fixtureService.getFixtureByID(fixtureID);
-            // Check if the fixture has already started
-            if (fixture.bettingAllowed()) {
-                throw new BettingNotPossibleException("Betting is not allowed for this fixture");
-            }
-        } catch (Exception e) {
-            throw new InternalServerError("Internal Server Error. Unable to get fixture");
-        }
-
-        StringBuilder message = new StringBuilder();
-        message.append("Bet placed on fixture ")
-                .append(fixtureID).append(" with bet type ")
-                .append(betType).append(" and selected bet ")
-                .append(selectedBet);
-
-        // Withdraw money from user
-        try {
-            transactionService.withdrawMoney(uid, amount, TransactionType.INTERNAL);
-        } catch (UnhandledErrorException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidTransactionException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidUserException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Place the bet
-        return bettingDao.placeBet(fixtureID, uid, new BigDecimal(amount), betType, selectedBet, new BigDecimal(oddMultiplier));
-
     }
 
     @Override
-    public void claimBets(String jwtToken, String email, int uid) throws NotAuthorizedException, InternalServerError {
-        // TODO authorize request
-        // authService.authorizeRequest(jwtToken, uid, email);
+    public int claimBets(int uid) throws UnhandledErrorException, UserNotFoundException {
 
-        try {
-            List<Map<String, Object>> bets = bettingDao.getBets(uid);
+        List<Map<String, Object>> bets = getBets(uid);
 
-            for (var bet : bets) {
+        int betsClaimed = 0;
 
-                if(!Objects.equals((String) bet.get("status"), "PENDING")) break;
+        for (Map<String, Object> bet : bets) {
+            // continue if status is not pending
+            if (!bet.get("status").equals("pending")) continue;
 
-                Integer betID;
-                Integer fixtureID;
-                String betType;
-                String selectedBet;
-                double betAmount;
-                double oddMultiplier;
+            try {
+                int betId = (int) bet.get("bet_id");
+                int fixtureId = (int) bet.get("fixture_id");
+                double amount = ((BigDecimal) bet.get("bet_amount")).doubleValue();
+                String betType = (String) bet.get("bet_type");
+                String prediction = (String) bet.get("selected_bet");
+                double oddMultiplier = ((BigDecimal) bet.get("win_multiplier")).doubleValue();
 
-                try {
-                    betID = (Integer) bet.get("bet_id");
-                    fixtureID = (Integer) bet.get("fixtureid");
-                    betType = (String) bet.get("bet_type");
-                    selectedBet = (String) bet.get("selected_bet");
-                    betAmount = ((BigDecimal) bet.get("bet_amount")).doubleValue();
-                    oddMultiplier = ((BigDecimal) bet.get("odds")).doubleValue();
-                } catch (Exception e) {
-                    throw new InternalServerError("Extracting bet data failed");
-                }
+                Fixture fixture = fixtureService.getFixtureByID(fixtureId);
 
-                Fixture fixture = fixtureService.getFixtureByID(fixtureID);
-
-                if (!Objects.equals(fixture.status(), "FT")) break;
+                if (!fixture.claimingAllowed()) continue;
 
                 if (betType.equals("WIN")) {
-
                     StringBuilder message = new StringBuilder();
                     message.append("Bet won on fixture ")
-                            .append(fixtureID).append(" with bet type ")
+                            .append(fixtureId).append(" with bet type ")
                             .append(betType).append(" and selected bet ")
-                            .append(selectedBet);
+                            .append(prediction);
 
-                    switch (selectedBet) {
+                    switch (prediction) {
                         case "Home":
                             if (fixture.homeGoals() > fixture.awayGoals()) {
-                                transactionService.addMoney(uid, betAmount * oddMultiplier, TransactionType.INTERNAL);
-                                bettingDao.changeStatus(betID, "WON");
+                                betsClaimed++;
+                                transactionService.addMoney(uid, amount * oddMultiplier, TransactionType.INTERNAL);
+                                betEditor.changeStatus(betId, "won");
                             } else {
-                                bettingDao.changeStatus(betID, "LOST");
+                                betsClaimed++;
+                                betEditor.changeStatus(betId, "lost");
                             }
                             break;
                         case "Away":
                             if (fixture.awayGoals() > fixture.homeGoals()) {
-                                transactionService.addMoney(uid, betAmount * oddMultiplier, TransactionType.INTERNAL);
-                                bettingDao.changeStatus(betID, "WON");
+                                betsClaimed++;
+                                transactionService.addMoney(uid, amount * oddMultiplier, TransactionType.INTERNAL);
+                                betEditor.changeStatus(betId, "won");
                             } else {
-                                bettingDao.changeStatus(betID, "LOST");
+                                betsClaimed++;
+                                betEditor.changeStatus(betId, "lost");
                             }
                             break;
                         case "Draw":
                             if (fixture.awayGoals() == fixture.homeGoals()) {
-                                transactionService.addMoney(uid, betAmount * oddMultiplier, TransactionType.INTERNAL);
-                                bettingDao.changeStatus(betID, "WON");
+                                betsClaimed++;
+                                transactionService.addMoney(uid, amount * oddMultiplier, TransactionType.INTERNAL);
+                                betEditor.changeStatus(betId, "won");
                             } else {
-                                bettingDao.changeStatus(betID, "LOST");
+                                betsClaimed++;
+                                betEditor.changeStatus(betId, "lost");
                             }
                             break;
                         default:
                             throw new InternalServerError("Invalid selected bet");
                     }
-
                 }
 
+            } catch (Exception e) {
+                throw new UnhandledErrorException(e);
             }
-        } catch (Exception e) {
-            throw new InternalServerError("Internal Server Error. Unable to claim bets " + e.getMessage());
+
         }
+
+        return betsClaimed;
     }
 
     @Override
-    public void cancelBet(String jwtToken, String email, int uid, int betID) throws InternalServerError, NotAuthorizedException, BetTypeMismatchException {
-        // TODO authorize request
-        // authService.authorizeRequest(jwtToken, uid, email)
-
-        Map<String, Object> bet = bettingDao.getBet(betID);
-
-        if (bet == null) {
-            throw new InternalServerError("Bet not found");
-        }
-
-        if(!Objects.equals((String) bet.get("status"), "PENDING")) {
-            throw new BetTypeMismatchException("Bet is not pending");
-        }
-
+    public List<Map<String, Object>> getBets(int uid) throws UnhandledErrorException, UserNotFoundException {
+        List<Map<String, Object>> bets;
         try {
-            bettingDao.cancelBet(betID);
-            transactionService.addMoney(uid, ((BigDecimal) bet.get("bet_amount")).doubleValue(), TransactionType.INTERNAL);
-        } catch (InternalServerError e) {
-            throw new InternalServerError("Internal Server Error. Unable to delete bet");
-        } catch (UnhandledErrorException e) {
-            throw new InternalServerError("Internal Server Error. Unable to refund" + e.getMessage());
-        } catch (InvalidTransactionException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidUserException e) {
-            throw new RuntimeException(e);
+            return betRetriever.retrieveBets(uid);
+        } catch (SQLException e) {
+
+            if (e.getSQLState().equals("23503"))
+                throw new UserNotFoundException("User not found in the database");
+            throw new UnhandledErrorException(e);
         }
     }
 
     @Override
-    public List<Map<String, Object>> getBets(String jwtToken, String email, int uid) throws InternalServerError, NotAuthorizedException {
-        // TODO authorize request
-        // authService.authorizeRequest(jwtToken, uid, email);
-
-        return bettingDao.getBets(uid);
+    public void cancelBet(int betId) throws UnhandledErrorException, UserNotFoundException, InvalidInputException, StatusAlreadyIdentical {
+        try {
+            BetEditor.BetEditorOutput betEditorOutput = betEditor.changeStatus(betId, "cancelled");
+            transactionService.addMoney(betEditorOutput.uid(), betEditorOutput.betAmount(), TransactionType.INTERNAL);
+        } catch (SQLException e) {
+            if (e.getSQLState().equals("23503"))
+                throw new UserNotFoundException("User not found in the database");
+            throw new UnhandledErrorException(e);
+        } catch (InvalidTransactionException e) {
+            throw new UnhandledErrorException(e);
+        } catch (InvalidUserException e) {
+            throw new UserNotFoundException("User not found in the database");
+        }
     }
-
-    @Override
-    public Map<String, Double> getStatistics(String jwtToken, String email, int uid) throws InternalServerError, NotAuthorizedException {
-        // TODO authorize request
-        // authService.authorizeRequest(jwtToken, uid, email);
-
-        Map<String, Double> stats = new HashMap<>();
-        System.out.println("Getting stats for " + uid);
-
-        stats.put("blocked", bettingDao.getBlockedAmount(uid));
-        System.out.println("Blocked: " + bettingDao.getBlockedAmount(uid));
-        stats.put("won", bettingDao.getWonAmount(uid));
-        System.out.println("Won: " + bettingDao.getWonAmount(uid));
-        stats.put("lost", bettingDao.getLostAmount(uid));
-        System.out.println("Lost: " + bettingDao.getLostAmount(uid));
-
-        return stats;
-    }
-
 }
