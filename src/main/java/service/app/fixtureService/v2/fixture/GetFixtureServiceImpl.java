@@ -92,8 +92,8 @@ public class GetFixtureServiceImpl implements GetFixtureService {
                             .map(o -> o.getAsJsonObject().get("short"))
                             .map(JsonElement::getAsString)
                             .orElse(null),
-                    goalsObj.has("home") && !goalsObj.get("home").isJsonNull() ? goalsObj.get("home").getAsInt() : 0,
-                    goalsObj.has("away") && !goalsObj.get("away").isJsonNull() ? goalsObj.get("away").getAsInt() : 0,
+                    goalsObj.has("home") && !goalsObj.get("home").isJsonNull() ? goalsObj.get("home").getAsInt() : -1,
+                    goalsObj.has("away") && !goalsObj.get("away").isJsonNull() ? goalsObj.get("away").getAsInt() : -1,
                     penaltyObj != null && penaltyObj.has("home") && !penaltyObj.get("home").isJsonNull() ? penaltyObj.get("home").getAsInt() : -1,
                     penaltyObj != null && penaltyObj.has("away") && !penaltyObj.get("away").isJsonNull() ? penaltyObj.get("away").getAsInt() : -1,
                     fixtureObj.getAsJsonObject("status").has("elapsed") && !fixtureObj.getAsJsonObject("status").get("elapsed").isJsonNull() ? fixtureObj.getAsJsonObject("status").get("elapsed").getAsInt() : -1
